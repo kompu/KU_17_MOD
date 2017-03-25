@@ -1,0 +1,8 @@
+c:\users\a1\documents\visual studio 2012\Projects\KU_17_WIN_MOD\KU_17_WIN_MOD\bin\Debug\KU_17_WIN_MOD.exe.config
+c:\users\a1\documents\visual studio 2012\Projects\KU_17_WIN_MOD\KU_17_WIN_MOD\bin\Debug\KU_17_WIN_MOD.exe
+c:\users\a1\documents\visual studio 2012\Projects\KU_17_WIN_MOD\KU_17_WIN_MOD\bin\Debug\KU_17_WIN_MOD.pdb
+c:\users\a1\documents\visual studio 2012\Projects\KU_17_WIN_MOD\KU_17_WIN_MOD\obj\Debug\KU_17_WIN_MOD.Form1.resources
+c:\users\a1\documents\visual studio 2012\Projects\KU_17_WIN_MOD\KU_17_WIN_MOD\obj\Debug\KU_17_WIN_MOD.Properties.Resources.resources
+c:\users\a1\documents\visual studio 2012\Projects\KU_17_WIN_MOD\KU_17_WIN_MOD\obj\Debug\KU_17_WIN_MOD.csproj.GenerateResource.Cache
+c:\users\a1\documents\visual studio 2012\Projects\KU_17_WIN_MOD\KU_17_WIN_MOD\obj\Debug\KU_17_WIN_MOD.exe
+c:\users\a1\documents\visual studio 2012\Projects\KU_17_WIN_MOD\KU_17_WIN_MOD\obj\Debug\KU_17_WIN_MOD.pdb
