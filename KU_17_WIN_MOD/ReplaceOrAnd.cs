@@ -80,6 +80,7 @@ namespace KU_17_WIN_MOD
             }
         }
     }
+
     class Combinations
     {
         public List<char[]> Combine(int round)
