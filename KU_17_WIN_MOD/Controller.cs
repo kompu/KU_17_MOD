@@ -11,7 +11,11 @@ namespace KU_17_WIN_MOD
         public int NumChars;
         public int Numtrue;
         private readonly ReplaceOrAnd _replace = new ReplaceOrAnd();
-        internal List<string> Init(string input, bool checkBoxAlllines)
+        private readonly GreedyAlgorithm _greedyAlgorithm =  new GreedyAlgorithm();
+        private readonly RandomAlgorithm _randomAlgorithm = new RandomAlgorithm();
+        private readonly DPLLAlgorithm _DLLAlgorithm = new DPLLAlgorithm();
+
+        internal List<string> InitBrute(string input, bool checkBoxAlllines)
         {
             Numtrue = 0;
             Sw.Reset();
@@ -61,6 +65,103 @@ namespace KU_17_WIN_MOD
                 }
 
             }
+
+            Sw.Stop();
+            return resultList;
+        }
+
+        internal List<string> InitGreedy(string input, bool checkBoxAlllines)
+        {
+            Numtrue = 0;
+            Sw.Reset();
+            Sw.Start();
+            string[] local = input.Split(new[] { ' ', '|', '&', '-' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> resultList = new List<string>();
+
+            Dictionary<string, int> letternum = new Dictionary<string, int>();
+
+            int count = 0;
+            for (int i = 0; i < local.Length; i++)
+            {
+                if (!letternum.ContainsKey(local[i]))
+                {
+                    letternum.Add(local[i], count);
+                    count++;
+                }
+            }
+
+            NumChars = letternum.Count;
+
+            List<char[]> ses = new Combinations().Combine(letternum.Count);
+
+            string local2 = input.Replace(" ", "").Replace("^", ",").Replace("v", ".");
+
+            _greedyAlgorithm.GreedyMethod(local2); // решение жадным методом
+
+            Sw.Stop();
+            return resultList;
+        }
+
+        internal List<string> InitRandom(string input, bool checkBoxAlllines)
+        {
+            Numtrue = 0;
+            Sw.Reset();
+            Sw.Start();
+            string[] local = input.Split(new[] { ' ', '|', '&', '-' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> resultList = new List<string>();
+
+            Dictionary<string, int> letternum = new Dictionary<string, int>();
+
+            int count = 0;
+            for (int i = 0; i < local.Length; i++)
+            {
+                if (!letternum.ContainsKey(local[i]))
+                {
+                    letternum.Add(local[i], count);
+                    count++;
+                }
+            }
+
+            NumChars = letternum.Count;
+
+            List<char[]> ses = new Combinations().Combine(letternum.Count);
+
+            string local2 = input.Replace(" ", "").Replace("^", ",").Replace("v", ".");
+
+            _randomAlgorithm.RandomMethod(local2); // решение жадным методом
+
+            Sw.Stop();
+            return resultList;
+        }
+
+        internal List<string> InitDPLL(string input, bool checkBoxAlllines)
+        {
+            Numtrue = 0;
+            Sw.Reset();
+            Sw.Start();
+            string[] local = input.Split(new[] { ' ', '|', '&', '-' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> resultList = new List<string>();
+
+            Dictionary<string, int> letternum = new Dictionary<string, int>();
+
+            int count = 0;
+            for (int i = 0; i < local.Length; i++)
+            {
+                if (!letternum.ContainsKey(local[i]))
+                {
+                    letternum.Add(local[i], count);
+                    count++;
+                }
+            }
+
+            NumChars = letternum.Count;
+
+            List<char[]> ses = new Combinations().Combine(letternum.Count);
+
+            string local2 = input.Replace(" ", "").Replace("^", ",").Replace("v", ".");
+
+            _DLLAlgorithm.DPLLMethod(local2); // решение жадным методом
+
             Sw.Stop();
             return resultList;
         }
