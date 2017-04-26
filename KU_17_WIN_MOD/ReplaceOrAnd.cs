@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace KU_17_WIN_MOD
 {
+    /// <summary>
+    /// Метод полного перебора. 
+    /// </summary>
     class ReplaceOrAnd
     {
         public bool WorkWithOrAndV1(string local3)
@@ -80,6 +83,7 @@ namespace KU_17_WIN_MOD
             }
         }
     }
+
     class Combinations
     {
         public List<char[]> Combine(int round)
