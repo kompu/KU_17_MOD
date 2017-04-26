@@ -72,31 +72,14 @@ namespace KU_17_WIN_MOD
 
         internal List<string> InitGreedy(string input, bool checkBoxAlllines)
         {
-            Numtrue = 0;
             Sw.Reset();
             Sw.Start();
             string[] local = input.Split(new[] { ' ', '|', '&', '-' }, StringSplitOptions.RemoveEmptyEntries);
             List<string> resultList = new List<string>();
 
-            Dictionary<string, int> letternum = new Dictionary<string, int>();
-
-            int count = 0;
-            for (int i = 0; i < local.Length; i++)
-            {
-                if (!letternum.ContainsKey(local[i]))
-                {
-                    letternum.Add(local[i], count);
-                    count++;
-                }
-            }
-
-            NumChars = letternum.Count;
-
-            List<char[]> ses = new Combinations().Combine(letternum.Count);
-
             string local2 = input.Replace(" ", "").Replace("^", ",").Replace("v", ".");
 
-            _greedyAlgorithm.GreedyMethod(local2); // решение жадным методом
+            resultList = _greedyAlgorithm.GreedyMethod(local2); // решение жадным методом
 
             Sw.Stop();
             return resultList;

@@ -280,6 +280,7 @@
             this.MinimizeBox = false;
             this.Name = "Form1";
             this.Opacity = 0.95D;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SAT-Solver";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
