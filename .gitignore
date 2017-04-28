@@ -9,6 +9,9 @@ capybara-*.html
 /coverage/
 /spec/tmp
 **.orig
+/KU_17_WIN_MOD/bin
+/KU_17_WIN_MOD/obj
+
 rerun.txt
 pickle-email-*.html
 
