@@ -28,13 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.buttonBrute = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.OnlyFirstData = new System.Windows.Forms.CheckBox();
+            this.OnlyTime = new System.Windows.Forms.CheckBox();
             this.buttonDPLL = new System.Windows.Forms.Button();
             this.buttonRandom = new System.Windows.Forms.Button();
             this.buttonGreedy = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxFormula = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -48,8 +51,13 @@
             this.LabelNumChars = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.button1 = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonBrute
@@ -64,11 +72,11 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.OnlyFirstData);
+            this.groupBox1.Controls.Add(this.OnlyTime);
             this.groupBox1.Controls.Add(this.buttonDPLL);
             this.groupBox1.Controls.Add(this.buttonRandom);
             this.groupBox1.Controls.Add(this.buttonGreedy);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.textBoxFormula);
             this.groupBox1.Controls.Add(this.buttonBrute);
@@ -78,6 +86,26 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Данные";
+            // 
+            // OnlyFirstData
+            // 
+            this.OnlyFirstData.AutoSize = true;
+            this.OnlyFirstData.Location = new System.Drawing.Point(15, 98);
+            this.OnlyFirstData.Name = "OnlyFirstData";
+            this.OnlyFirstData.Size = new System.Drawing.Size(158, 17);
+            this.OnlyFirstData.TabIndex = 10;
+            this.OnlyFirstData.Text = "только Первый ресультат";
+            this.OnlyFirstData.UseVisualStyleBackColor = true;
+            // 
+            // OnlyTime
+            // 
+            this.OnlyTime.AutoSize = true;
+            this.OnlyTime.Location = new System.Drawing.Point(15, 121);
+            this.OnlyTime.Name = "OnlyTime";
+            this.OnlyTime.Size = new System.Drawing.Size(170, 17);
+            this.OnlyTime.TabIndex = 9;
+            this.OnlyTime.Text = "только время и комбинации";
+            this.OnlyTime.UseVisualStyleBackColor = true;
             // 
             // buttonDPLL
             // 
@@ -108,28 +136,6 @@
             this.buttonGreedy.Text = "Жадный алгоритм";
             this.buttonGreedy.UseVisualStyleBackColor = true;
             this.buttonGreedy.Click += new System.EventHandler(this.buttonGreedy_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 132);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Показать:";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "только время и комбинации",
-            "только истинные комбинации",
-            "все комбинации"});
-            this.comboBox1.Location = new System.Drawing.Point(69, 129);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(161, 21);
-            this.comboBox1.TabIndex = 4;
             // 
             // label2
             // 
@@ -267,12 +273,59 @@
             this.checkBox1.Text = "Beta";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
+            // chart1
+            // 
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
+            this.chart1.Location = new System.Drawing.Point(718, 73);
+            this.chart1.Name = "chart1";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
+            this.chart1.Size = new System.Drawing.Size(461, 339);
+            this.chart1.TabIndex = 4;
+            this.chart1.Text = "chart1";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(839, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(119, 42);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "All test!!";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(718, 462);
+            this.progressBar1.MarqueeAnimationSpeed = 80;
+            this.progressBar1.Maximum = 10;
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(461, 23);
+            this.progressBar1.TabIndex = 7;
+            // 
+            // progressBar2
+            // 
+            this.progressBar2.Location = new System.Drawing.Point(718, 433);
+            this.progressBar2.Maximum = 50;
+            this.progressBar2.Name = "progressBar2";
+            this.progressBar2.Size = new System.Drawing.Size(461, 23);
+            this.progressBar2.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Azure;
-            this.ClientSize = new System.Drawing.Size(699, 422);
+            this.ClientSize = new System.Drawing.Size(1205, 497);
+            this.Controls.Add(this.progressBar2);
+            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.chart1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -282,10 +335,12 @@
             this.Opacity = 0.95D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SAT-Solver";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -308,11 +363,15 @@
         private System.Windows.Forms.Label labelNumComb;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button buttonDPLL;
         private System.Windows.Forms.Button buttonRandom;
         private System.Windows.Forms.Button buttonGreedy;
+        private System.Windows.Forms.CheckBox OnlyFirstData;
+        private System.Windows.Forms.CheckBox OnlyTime;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ProgressBar progressBar2;
     }
 }
 

@@ -9,6 +9,7 @@ namespace KU_17_WIN_MOD
     /// </summary>
     class ReplaceOrAnd
     {
+        
         public bool WorkWithOrAndV1(string local3)
         {
             Regex or = new Regex(@"([\w])(\|)(\w)");
