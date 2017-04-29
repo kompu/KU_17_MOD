@@ -10,8 +10,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace KU_17_WIN_MOD
 {
-    public partial class Form1
-        : Form
+    public partial class Form1 : Form
     {
         readonly Controller _control = new Controller();
 

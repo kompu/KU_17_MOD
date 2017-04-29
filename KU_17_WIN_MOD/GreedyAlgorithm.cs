@@ -18,16 +18,16 @@ namespace KU_17_WIN_MOD
         int[] secondGood;
         List<string> resultList;
         bool isSolved = false;
-        private bool _checkBoxAlllines;
+        Random rnd = new Random();
+        long iterations;
+
         /// <summary>
         /// Жадный алгоритм решения SAT 
         /// </summary>
         /// <param name="formule"></param>
-        /// <param name="checkBoxAlllines"></param>
         /// <returns></returns>
-        public List<string> GreedyMethod(string formule, bool checkBoxAlllines)
+        public List<string> GreedyMethod(string formule)
         {
-            _checkBoxAlllines = checkBoxAlllines; 
             ClearResult();
             ClearClozesAndValuesList();
             ClearFirstAndSecondStringClozes();
@@ -44,14 +44,21 @@ namespace KU_17_WIN_MOD
             isSolved = false;
         }
 
-        private void Print()
+        private void Print(bool flag)
         {
             string result = null;
-            for (int i = 0;i<valuesList.Count;i++)
+            if (flag)
             {
-                result += valuesList[i] + "=" + boolListValues[i] + ", ";
+                for (int i = 0; i < valuesList.Count; i++)
+                {
+                    result += valuesList[i] + "=" + boolListValues[i] + ", ";
+                }
+                result += ": " + isSolved;
             }
-            result += ": " + isSolved;
+            else
+            {
+                result = "Задачу невозможно решить!";
+            }
             resultList.Add(result);
         }
 
@@ -78,39 +85,42 @@ namespace KU_17_WIN_MOD
 
         private bool ToSolveClozes()
         {
+            long value = (long)Math.Pow(valuesList.Count, 2) * 2;
             boolListValues = RandomSetBoolValuesInList();
-
             ClearFirstAndSecondStringClozes();
             FillFirstAndSecondStringClozes();
             firstGood = new int[firstStringClosez.Count];
             secondGood = new int[secondStringClozes.Count];
 
-            while (true)
+            while (iterations <= value)
             {
                 ClearFirstAndSecondStringClozes();
                 FillFirstAndSecondStringClozes();
 
-                if (LiteralsToDigits(firstStringClosez, false) &&
-                LiteralsToDigits(secondStringClozes, true))
+                bool flag1 = LiteralsToDigits(firstStringClosez, false);
+                bool flag2 = LiteralsToDigits(secondStringClozes, true);
+                if (flag1 && flag2)
                 {
                     isSolved = true;
-                    Print();
+                    Print(true);
                     break;
                 }
                 else
                 {
                     SetNewBoolValuesInList();
                 }
+                iterations++;
             }
 
-            while (!isSolved)
+            if (isSolved)
             {
-                //SATSolverIteration(firstStringClosez);
-                //SATSolverIteration(secondStringClozes);
-                break;
+                return true;
             }
-
-            return false;
+            else
+            {
+                Print(false);
+                return false;
+            }
         }
 
 
@@ -132,11 +142,13 @@ namespace KU_17_WIN_MOD
                         if (charCloze[j].Equals(valuesList[x]))
                         {
                             charCloze[j] = boolListValues[x].ToString();
-                            if (valuesList[x].Contains("-"))
-                            {
-                                if (charCloze[j].Equals("1")) charCloze[j] = "0";
-                                else charCloze[j] = "1";
-                            }
+                            break;
+                        }
+                        else if (charCloze[j].Equals("-"+valuesList[x]))
+                        {
+                            charCloze[j] = boolListValues[x].ToString();
+                            if (charCloze[j].Equals("1")) charCloze[j] = "0";
+                            else charCloze[j] = "1";
                             break;
                         }
                     }
@@ -183,6 +195,32 @@ namespace KU_17_WIN_MOD
             return flag;
         }
 
+        private int CheckTheBiggestStringOfClozes()
+        {
+            int flag = 0;
+            int sum = 0;
+            bool flagFirst;
+            bool flagSecond;
+
+            foreach (int i in firstGood)
+            {
+                sum += i;
+            }
+            flagFirst = sum == firstGood.Length ? true : false;
+            sum = 0;
+            foreach (int i in secondGood)
+            {
+                sum += i;
+            }
+            flagSecond = sum == secondGood.Length ? true : false;
+
+            if (flagFirst && !flagSecond) flag = 1;
+            else if (!flagFirst && flagSecond) flag = 2;
+            else flag = 0;
+
+            return flag;
+        }
+
         public int CheckClozeString(string clozeString,char charOperator)
         {
             int flag = 0;
@@ -212,7 +250,7 @@ namespace KU_17_WIN_MOD
                     if (charCloze[i].Equals(operators[j]))
                     {
                         charOperator = operators[j];
-                        break;
+                        return charOperator;
                     }
                 }
 
@@ -227,7 +265,7 @@ namespace KU_17_WIN_MOD
         /// <returns></returns>
         private int[] RandomSetBoolValuesInList()
         {
-            Random rnd = new Random();
+
             int[] boolListValues = new int[this.valuesList.Count];
             for (int i = 0;i<boolListValues.Length;i++)
                 boolListValues[i] = rnd.Next(0,2);
@@ -241,18 +279,36 @@ namespace KU_17_WIN_MOD
             int j = 0;
             int fromCloze = 0;
             string cloze = null;
+            int flag = CheckTheBiggestStringOfClozes();
+            bool firstOrSecond = false;
 
-            for (i = 0;i<firstGood.Length;)
+            if (flag == 0)
             {
-                if (firstGood[i] != 1)
-                {
-                    cloze = firstStringClosez[i];
-                    fromCloze = i * 2;
-                    break;
-                }
-                i++;
+                firstOrSecond = rnd.NextDouble() > 0.5f ? true : false;
             }
-            if (cloze == null)
+            else if (flag == 2)
+            {
+                firstOrSecond = true;
+            }
+            else if (flag == 1)
+            {
+                firstOrSecond = false;
+            }
+
+            if (firstOrSecond)
+            {
+                for (i = 0; i < firstGood.Length;)
+                {
+                    if (firstGood[i] != 1)
+                    {
+                        cloze = firstStringClosez[i];
+                        fromCloze = i * 2;
+                        break;
+                    }
+                    i++;
+                }
+            }
+            else if (!firstOrSecond || cloze == null)
             {
                 for (j = 0; j < secondGood.Length;j++)
                 {
@@ -265,7 +321,12 @@ namespace KU_17_WIN_MOD
                     }
                 }
             }
+            // выдает ошибку отсутствия клоза, если идем не по той строке 
+            // (если первая строка клозов 1/1 а вторая 0/1, 
+            // но мы идем по первой. 
+            // проверка на сумму нужна
             string[] charCloze = cloze.Split(operators);
+
             if (charCloze[0].Equals("0"))
             {
                 string[] s = clozes[fromCloze].Split(operators);
@@ -280,8 +341,21 @@ namespace KU_17_WIN_MOD
                         }
                         else
                         {
-                            //boolListValues[x] = 0;
-                            //break;
+                            boolListValues[x] = 0;
+                            break;
+                        }
+                    }
+                    else if (s[0].Equals("-"+valuesList[x]))
+                    {
+                        if (boolListValues[x] == 0)
+                        {
+                            boolListValues[x] = 1;
+                            break;
+                        }
+                        else
+                        {
+                            boolListValues[x] = 0;
+                            break;
                         }
                     }
                 }
@@ -300,10 +374,23 @@ namespace KU_17_WIN_MOD
                         }
                         else
                         {
-                            //boolListValues[x] = 0;
-                            //break;
+                            boolListValues[x] = 0;
+                            break;
                         }
                         
+                    }
+                    else if ((s[1].Equals("-"+valuesList[x])))
+                    {
+                        if (boolListValues[x] == 0)
+                        {
+                            boolListValues[x] = 1;
+                            break;
+                        }
+                        else
+                        {
+                            boolListValues[x] = 0;
+                            break;
+                        }
                     }
                 }
             }
@@ -369,11 +456,20 @@ namespace KU_17_WIN_MOD
             for (int i = 0;i< valuesList.Count;i++)
             {
                 flag = false;
+                char[] chars = valuesList[i].ToCharArray();
+
                 for (int j = 0;j<this.valuesList.Count;j++)
                 {
-                    if (this.valuesList[j].Equals(valuesList[i])) flag = true;
+                    if (this.valuesList[j].Equals(chars[chars.Length-1].ToString()))
+                    {
+                        flag = true;
+                        break;
+                    }
                 }
-                if (!flag) this.valuesList.Add(valuesList[i]);
+                if (!flag)
+                {
+                    this.valuesList.Add(chars[chars.Length - 1].ToString());
+                }
             }
         }
     }

@@ -83,7 +83,7 @@ namespace KU_17_WIN_MOD
 
             string local2 = input.Replace(" ", "").Replace("^", ",").Replace("v", ".");
 
-            resultList = _greedyAlgorithm.GreedyMethod(local2, checkBoxAlllines); // решение жадным методом
+            resultList = _greedyAlgorithm.GreedyMethod(local2); // решение жадным методом
 
             Sw.Stop();
             return resultList;
