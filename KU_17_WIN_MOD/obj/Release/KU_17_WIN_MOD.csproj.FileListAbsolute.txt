@@ -1,8 +1,0 @@
-C:\Users\user\Documents\GitHub\KU_17_MOD\KU_17_WIN_MOD\bin\Release\KU_17_WIN_MOD.exe.config
-C:\Users\user\Documents\GitHub\KU_17_MOD\KU_17_WIN_MOD\bin\Release\KU_17_WIN_MOD.exe
-C:\Users\user\Documents\GitHub\KU_17_MOD\KU_17_WIN_MOD\bin\Release\KU_17_WIN_MOD.pdb
-C:\Users\user\Documents\GitHub\KU_17_MOD\KU_17_WIN_MOD\obj\Release\KU_17_WIN_MOD.Form1.resources
-C:\Users\user\Documents\GitHub\KU_17_MOD\KU_17_WIN_MOD\obj\Release\KU_17_WIN_MOD.Properties.Resources.resources
-C:\Users\user\Documents\GitHub\KU_17_MOD\KU_17_WIN_MOD\obj\Release\KU_17_WIN_MOD.csproj.GenerateResource.Cache
-C:\Users\user\Documents\GitHub\KU_17_MOD\KU_17_WIN_MOD\obj\Release\KU_17_WIN_MOD.exe
-C:\Users\user\Documents\GitHub\KU_17_MOD\KU_17_WIN_MOD\obj\Release\KU_17_WIN_MOD.pdb
