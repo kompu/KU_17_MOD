@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.buttonBrute = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.OnlyFirstData = new System.Windows.Forms.CheckBox();
@@ -53,8 +54,8 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.button1 = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.progressBar2 = new System.Windows.Forms.ProgressBar();
+            this.progressBar3 = new System.Windows.Forms.ProgressBar();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -275,55 +276,59 @@
             // 
             // chart1
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart1.Legends.Add(legend3);
-            this.chart1.Location = new System.Drawing.Point(718, 73);
+            chartArea4.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea4);
+            legend4.Name = "Legend1";
+            this.chart1.Legends.Add(legend4);
+            this.chart1.Location = new System.Drawing.Point(718, 12);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(461, 339);
+            series4.ChartArea = "ChartArea1";
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            this.chart1.Series.Add(series4);
+            this.chart1.Size = new System.Drawing.Size(569, 620);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "chart1";
+            title4.Name = "Methods Time";
+            title4.Text = "Methods Time";
+            this.chart1.Titles.Add(title4);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(839, 12);
+            this.button1.Location = new System.Drawing.Point(66, 441);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(119, 42);
+            this.button1.Size = new System.Drawing.Size(131, 42);
             this.button1.TabIndex = 6;
-            this.button1.Text = "All test!!";
+            this.button1.Text = "All test (one result) !!";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // progressBar1
+            // progressBar3
             // 
-            this.progressBar1.Location = new System.Drawing.Point(718, 462);
-            this.progressBar1.MarqueeAnimationSpeed = 80;
-            this.progressBar1.Maximum = 10;
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(461, 23);
-            this.progressBar1.TabIndex = 7;
+            this.progressBar3.Location = new System.Drawing.Point(221, 441);
+            this.progressBar3.Maximum = 4;
+            this.progressBar3.Name = "progressBar3";
+            this.progressBar3.Size = new System.Drawing.Size(461, 23);
+            this.progressBar3.TabIndex = 9;
             // 
-            // progressBar2
+            // button2
             // 
-            this.progressBar2.Location = new System.Drawing.Point(718, 433);
-            this.progressBar2.Maximum = 50;
-            this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(461, 23);
-            this.progressBar2.TabIndex = 8;
+            this.button2.Location = new System.Drawing.Point(66, 499);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(131, 44);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "All test (all result) !!";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Azure;
-            this.ClientSize = new System.Drawing.Size(1205, 497);
-            this.Controls.Add(this.progressBar2);
-            this.Controls.Add(this.progressBar1);
+            this.ClientSize = new System.Drawing.Size(1299, 644);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.progressBar3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.checkBox1);
@@ -370,8 +375,8 @@
         private System.Windows.Forms.CheckBox OnlyTime;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.ProgressBar progressBar3;
+        private System.Windows.Forms.Button button2;
     }
 }
 

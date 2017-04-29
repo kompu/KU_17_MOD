@@ -12,6 +12,14 @@ namespace KU_17_WIN_MOD
 {
     public partial class Form1 : Form
     {
+        private int maxChartMethods = 2;
+        private int maxChartAverage = 10;
+        private int maxChartexamples = 9;
+
+
+
+        private bool allResults;
+        private List<string> resList = new List<string>();
         readonly Controller _control = new Controller();
 
         public Form1()
@@ -20,8 +28,34 @@ namespace KU_17_WIN_MOD
             OnlyTime.Checked = false;
             InitProcessBrute();
             CleanScreen();
-            
 
+             exampleData[0] = "b | a";                                                                                      //ab
+             exampleData[1] = "b | a & b & -c | d & a";                                                                     //abcd
+             exampleData[2] = "b | a & b & -c | d & a & e | f ";                                                            //abcdef
+             exampleData[3] = "b | a & b & -c | d & a & e | f & g & h";                                                     //abcdefgh
+             exampleData[4] = "b | a & b & -c & d & a & e | f & g & h | i | j";                                             //abcdefghij
+             exampleData[5] = "b | a & b & -c & d & a & e | f & g & h | i | j & k | l";                                     //abcdefghijkl
+             exampleData[6] = "b | a & b & -c & d & a & k | f & g & h | i | j & l | e | m & n";                             //abcdefghijklmn
+             exampleData[7] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p";                     //abcdefghijklmnop
+             exampleData[8] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p & q & r";             //abcdefghijklmnopqr
+             exampleData[9] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p & q & r & s | t";     //abcdefghijklmnopqrst
+
+            string final = "date" + " : " + "note";
+
+
+
+            /*
+             exampleData[0] = "a";                                                                                      //ab
+             exampleData[1] = "b | a";
+             exampleData[2] = "b | a & b & -c";                                                                     //abcd
+             exampleData[3] = "b | a & b & -c | d & a";                                                                     //abcd
+             exampleData[4] = "b | a & b & -c | d & a & e ";                                                            //abcdef
+             exampleData[5] = "b | a & b & -c | d & a & e | f ";
+             exampleData[6] = "b | a & b & -c | d & a & e | f & g";                                                     //abcdefgh
+             exampleData[7] = "b | a & b & -c | d & a & e | f & g & h";
+             exampleData[8] = "b | a & b & -c | d & a & e | f & g & h | i ";                                             //abcdefghij
+             exampleData[9] = "b | a & b & -c | d & a & e | f & g & h | i | j";                                             //abcdefghij
+              */
         }
 
         #region Felippe. Алгоритм полного перебора
@@ -47,21 +81,10 @@ namespace KU_17_WIN_MOD
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
 
-            //Thread tread = new Thread(MethodParallelBrute);
-            //tread.Start();
-            resList = _control.InitBrute(textBoxFormula.Text, allResults);
+            resList = _control.InitBrute(textBoxFormula.Text, OnlyFirstData.Checked);
 
-            PrintData(resList, allResults);
+            PrintData(resList);
         }
-
-        private void MethodParallelBrute()
-        {
-            resList  = _control.InitBrute(textBoxFormula.Text, allResults);
-        }
-
-        private bool allResults;
-        private List<string> resList = new List<string>();
-
         #endregion
 
         #region Oleg. Жадный алгоритм
@@ -84,9 +107,9 @@ namespace KU_17_WIN_MOD
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
 
-            List<string> resList = _control.InitGreedy(textBoxFormula.Text, allResults);
+            List<string> resList = _control.InitGreedy(textBoxFormula.Text, OnlyFirstData.Checked);
 
-            PrintData(resList, allResults);
+            PrintData(resList);
         }
         #endregion.
 
@@ -110,9 +133,9 @@ namespace KU_17_WIN_MOD
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
 
-            List<string> resList = _control.InitRandom(textBoxFormula.Text, allResults);
+            List<string> resList = _control.InitRandom(textBoxFormula.Text, OnlyFirstData.Checked);
 
-            PrintData(resList, allResults);
+            PrintData(resList);
         }
 
 
@@ -132,15 +155,22 @@ namespace KU_17_WIN_MOD
             }
         }
 
+
+        List<string> words = new List<string>();
+
+
+
+
+
         private void InitProcessDPLL()
         {
             richTextBoxRes.Text = string.Empty; //clean
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
 
-            List<string> resList = _control.InitDPLL(textBoxFormula.Text, allResults);
+            List<string> resList = _control.InitDPLL(textBoxFormula.Text, OnlyFirstData.Checked);
 
-            PrintData(resList, allResults);
+            PrintData(resList);
         }
         #endregion
 
@@ -179,7 +209,7 @@ namespace KU_17_WIN_MOD
             LabelNumChars.Text = "0";
         }
 
-        private void PrintData(List<string> resList, bool allResults)
+        private void PrintData(List<string> resList)
         {
             if (printChartProccess) return;
             if (allResults)
@@ -197,83 +227,95 @@ namespace KU_17_WIN_MOD
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Createchart(true);
+        }
+
+        private void Createchart(bool firstData)
+        {
             printChartProccess = true;
+            chart1.Series.Clear();
+            richTextBoxRes.Text = "";
+            chart1.Series.Add("sd");
+            //все дата
+            OnlyTime.Checked = false;
+            OnlyFirstData.Checked = firstData;
 
-            chart1.Titles.Add("Total Income");
-            Thread tread = new Thread(loadData4Charts);
-            tread.Start();
-            tread.Join();
+            progressBar3.Value = 0;
 
-            foreach (string resultatChar in resultatChars)
+            for (int m = 0; m < maxChartMethods; m++)
             {
-                richTextBoxRes.Text += resultatChar;
+                _actualMethod = m + 1;
+                Thread tread = new Thread(loadData4Charts);
+                tread.Start();
+                tread.Join();
+                for (int index = 0; index < 10; index++)
+                {
+                    richTextBoxRes.Text += nameMethods[m] + "- NLetters:" + ((index + 1) * 2).ToString().PadLeft(2, '0') + " aveTime: " + TimeAllData[m, index].ToString("F8") + Environment.NewLine;
+                }
+                progressBar3.Value++;
             }
+            PrintCharts();
             printChartProccess = false;
         }
 
         private bool printChartProccess = false;
-        private int Progress1 = 0;
-        private int Progress2 = 0;
+        private int _actualMethod = 0;
+        string[] exampleData = new string[10];
+        string[] nameMethods = { "brute", "random", "greddy", "DPLL" };
+        Double[,] TimeAllData = new double[4, 10];
 
         private void loadData4Charts()
         {
-            string[] exampleData=new string[10];
-            exampleData[0] = "b | a";                                                                                      //ab
-            exampleData[1] = "b | a & b & -c | d & a";                                                                     //abcd
-            exampleData[2] = "b | a & b & -c | d & a & e | f ";                                                            //abcdef
-            exampleData[3] = "b | a & b & -c | d & a & e | f & g & h";                                                     //abcdefgh
-            exampleData[4] = "b | a & b & -c | d & a & e | f & g & h | i | j";                                             //abcdefghij
-            exampleData[5] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l";                                     //abcdefghijkl
-            exampleData[6] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n";                             //abcdefghijklmn
-            exampleData[7] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p";                     //abcdefghijklmnop
-            exampleData[8] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p & q & r";             //abcdefghijklmnopqr
-            exampleData[9] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p & q & r & s | t";     //abcdefghijklmnopqrst
-            
-            Double[] bruteAllData = new double[20];
-            Double[] randomAllData = new double[20];
-            Double[] GreedyAllData = new double[20];
-            Double[] DPLLAllData = new double[20];
-            
-            //все дата
-            OnlyFirstData.Checked = false;
-            OnlyTime.Checked = false;
-            
-            ///////////////////////ready
-            
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < maxChartexamples; i++)
             {
                 TimeSpan span = TimeSpan.Zero;
-                for (int a = 0; a < 5; a++)
+                for (int a = 0; a < maxChartAverage; a++)
                 {
-                    _control.InitBrute(exampleData[i], allResults);
+                    switch (_actualMethod)
+                    {
+                        case 1:
+                            _control.InitBrute(exampleData[i], allResults);
+                            break;
+                        case 2:
+                            _control.InitRandom(exampleData[i], allResults);
+                            break;
+                        case 3:
+                            _control.InitGreedy(exampleData[i], allResults);
+                            break;
+                        case 4:
+                            _control.InitDPLL(exampleData[i], allResults);
+                            break;
+                    }
+
                     span += _control.Sw.Elapsed;
-                    progressBar2.Value++;
                 }
-                double AverageTime = span.TotalSeconds / (Double)5;
-                bruteAllData[i] = Math.Round(AverageTime,10);
-                progressBar1.Value++;
-            }
-            for (int index= 0; index < bruteAllData.Length; index++)
-            {
-                resultatChars[index] += "Brute- NLetters:" + index*2 +" aveTime: "+bruteAllData[index]+Environment.NewLine;
+                TimeAllData[_actualMethod - 1, i] = Math.Round((Double)span.TotalSeconds / (Double)maxChartAverage, 10);
             }
         }
 
-        string[] resultatChars = new string[20];
 
-        private void printCharts( )
+        private void PrintCharts()
         {
-            Series series = chart1.Series.Add("Total Income");
-            series.ChartType = SeriesChartType.Spline;
-            for (int i = 0; i < 10; i++)
+            for (int m = 0; m < 4; m++)
             {
-                series.Points.AddXY(i*2, 100);    
+                Series series = new Series(nameMethods[m]) { ChartType = SeriesChartType.Spline };
+                for (int i = 0; i < 10; i++)
+                {
+                    series.Points.AddXY(i * 2, TimeAllData[m, i]);
+                }
+                chart1.Series.Add(series);
             }
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            CheckForIllegalCrossThreadCalls = false;
+            //CheckForIllegalCrossThreadCalls = false;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Createchart(false);
         }
 
     }
