@@ -1,8 +1,6 @@
 *.rbc
 capybara-*.html
 .rspec
-/KU_17_WIN_MOD/bin 
-/KU_17_WIN_MOD/obj
 /log
 /tmp
 /db/*.sqlite3

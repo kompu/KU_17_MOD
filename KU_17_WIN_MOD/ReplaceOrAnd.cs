@@ -10,56 +10,8 @@ namespace KU_17_WIN_MOD
     class ReplaceOrAnd
     {
         
-        public bool WorkWithOrAndV1(string local3)
-        {
-            Regex or = new Regex(@"([\w])(\|)(\w)");
-            Regex and = new Regex(@"([\w])(\&)(\w)");
-            local3 = local3.Replace("-1", "0");
-            local3 = local3.Replace("-0", "1");
 
-            while (true)
-            {
-                Match matchOr = or.Match(local3);
-                int r2;
-                int start;
-                int len;
-                if (matchOr.Success)
-                {
-                    start = matchOr.Index;
-                    len = matchOr.Length;
-                    r2 = matchOr.Groups[1].Value + matchOr.Groups[3].Value == "00" ? 0 : 1;
-                }
-                else
-                {
-                    Match matchAnd = and.Match(local3);
-                    if (matchAnd.Success)
-                    {
-                        start = matchAnd.Index;
-                        len = matchAnd.Length;
-                        r2 = matchAnd.Groups[1].Value + matchAnd.Groups[3].Value == "11" ? 1 : 0;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                string r1 = local3.Substring(0, start);
-                string r3 = local3.Substring(start + len);
-                local3 = r1 + r2 + r3;
-
-            }
-            switch (local3)
-            {
-                case "1":
-                    return true;
-                case "0":
-                    return false;
-                default:
-                    return false; //error
-            }
-        }
-
-        public bool WorkWithOrAndV2(string local3)
+        public static bool WorkWithOrAndV2(string local3)
         {
             local3 = local3.Replace("-1", "0");
             local3 = local3.Replace("-0", "1");

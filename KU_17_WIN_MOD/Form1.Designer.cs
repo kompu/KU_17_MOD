@@ -28,6 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -56,9 +60,12 @@
             this.button1 = new System.Windows.Forms.Button();
             this.progressBar3 = new System.Windows.Forms.ProgressBar();
             this.button2 = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonBrute
@@ -73,6 +80,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.OnlyFirstData);
             this.groupBox1.Controls.Add(this.OnlyTime);
             this.groupBox1.Controls.Add(this.buttonDPLL);
@@ -276,22 +284,22 @@
             // 
             // chart1
             // 
-            chartArea4.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea4);
-            legend4.Name = "Legend1";
-            this.chart1.Legends.Add(legend4);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
             this.chart1.Location = new System.Drawing.Point(718, 12);
             this.chart1.Name = "chart1";
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.chart1.Series.Add(series4);
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(569, 620);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "chart1";
-            title4.Name = "Methods Time";
-            title4.Text = "Methods Time";
-            this.chart1.Titles.Add(title4);
+            title3.Name = "Methods Time";
+            title3.Text = "Methods Time";
+            this.chart1.Titles.Add(title3);
             // 
             // button1
             // 
@@ -321,12 +329,42 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(108, 56);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(396, 21);
+            this.comboBox1.TabIndex = 11;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // chart2
+            // 
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
+            legend4.Name = "Legend1";
+            this.chart2.Legends.Add(legend4);
+            this.chart2.Location = new System.Drawing.Point(718, 12);
+            this.chart2.Name = "chart2";
+            series4.ChartArea = "ChartArea1";
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            this.chart2.Series.Add(series4);
+            this.chart2.Size = new System.Drawing.Size(569, 620);
+            this.chart2.TabIndex = 11;
+            this.chart2.Text = "chart2";
+            title4.Name = "Methods Time";
+            title4.Text = "Methods Time";
+            this.chart2.Titles.Add(title4);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Azure;
             this.ClientSize = new System.Drawing.Size(1299, 644);
+            this.Controls.Add(this.chart2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.progressBar3);
             this.Controls.Add(this.button1);
@@ -346,6 +384,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -377,6 +416,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ProgressBar progressBar3;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
     }
 }
 
