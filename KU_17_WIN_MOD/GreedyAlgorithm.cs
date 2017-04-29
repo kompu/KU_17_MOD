@@ -85,7 +85,8 @@ namespace KU_17_WIN_MOD
 
         private bool ToSolveClozes()
         {
-            long value = (long)Math.Pow(valuesList.Count, 2) * 2;
+            long value = (long)Math.Pow(valuesList.Count, 2) * (long)Math.Pow(2,valuesList.Count)/2;
+            iterations = 0;
             boolListValues = RandomSetBoolValuesInList();
             ClearFirstAndSecondStringClozes();
             FillFirstAndSecondStringClozes();
@@ -406,7 +407,7 @@ namespace KU_17_WIN_MOD
             List<string> generatedListClozes = new List<string>(); // лист с выходными формулами
             this.operators[0] = '&';
             this.operators[1] = '|';
-            char[] opT = new char[13];
+            char[] opT = new char[27];
             opT[0] = 'a';
             opT[1] = 'b';
             opT[2] = 'c';
@@ -415,11 +416,25 @@ namespace KU_17_WIN_MOD
             opT[5] = 'f';
             opT[6] = 'g';
             opT[7] = 'h';
-            opT[8] = 'k';
-            opT[9] = 'l';
-            opT[10] = 'm';
-            opT[11] = 'n';
-            opT[12] = '-';
+            opT[8] = 'i';
+            opT[9] = 'g';
+            opT[10] = 'k';
+            opT[11] = 'l';
+            opT[12] = 'm';
+            opT[13] = 'n';
+            opT[14] = 'o';
+            opT[15] = 'p';
+            opT[16] = 'q';
+            opT[17] = 'r';
+            opT[18] = 's';
+            opT[19] = 't';
+            opT[20] = 'u';
+            opT[21] = 'v';
+            opT[22] = 'w';
+            opT[23] = 'x';
+            opT[24] = 'y';
+            opT[25] = 'z';
+            opT[26] = '-';
 
             string[] operands = formule.Split(this.operators);
             string[] operators = formule.Split(opT);
