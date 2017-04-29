@@ -1,0 +1,6 @@
+language: csharp
+solution: KU_17_WIN_MOD.sln
+install:
+- travis_retry nuget restore -source "https://www.nuget.org/api/v2" ./KU_17_WIN_MOD.sln
+script:
+- xbuild /p:TargetFrameworkVersion="v4.6.2"
