@@ -34,11 +34,12 @@ namespace KU_17_WIN_MOD
 
         internal List<string> InitGreedy(string input, bool onlyFirstData)
         {
+            Sw.Reset();
+            Sw.Start();
             string[] local = input.Split(new[] { ' ', '|', '&', '-' }, StringSplitOptions.RemoveEmptyEntries);
             int numresults = _bruteAlgorithm.initAlgorithm(local, onlyFirstData, input).Count;
             
-            Sw.Reset();
-            Sw.Start();
+
             
             List<string> resultList = new List<string>();
 

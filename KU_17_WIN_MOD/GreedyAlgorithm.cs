@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace KU_17_WIN_MOD
@@ -222,13 +223,13 @@ namespace KU_17_WIN_MOD
         public List<string> allClozes; // все клозы
         public List<string> firstClozes; // лист с первыми клозами
         public List<string> secondClozes; // лист со вторыми клозами
-        public int sumTrueFirstClozes; // сумма всех правильных клозов из первого листа
-        public int sumTrueSecondClozes; // сумма всех правильных клозов из второго листа
+        public volatile int sumTrueFirstClozes; // сумма всех правильных клозов из первого листа
+        public volatile int sumTrueSecondClozes; // сумма всех правильных клозов из второго листа
         public List<char> alphavite;
         public List<char> allOperands;
-        private List<int> steps;
+        private volatile List<int> steps;
         private List<int> tempRandomClozeChange;
-        private int[] valuesOperands;
+        private volatile byte[] valuesOperands;
 
         public long maxIterations;
         public int maxFlips;
@@ -271,14 +272,13 @@ namespace KU_17_WIN_MOD
             while (resultList.Count < maxIterations)
             {
                 FlipAndCalculate(); // изменяем значение переменной, чтобы изменилось максимальное количество клозов
-                if (CheckCorrectly(this.formule)) // 
+                if (CheckCorrectly(formule)) 
                 {
                     Print();
                     RandomValuesOperands();
                 }
                 iterations++;
             }
-
             return true;
         }
 
@@ -302,7 +302,7 @@ namespace KU_17_WIN_MOD
         private void RandomValuesOperands()
         {
             for (int i = 0; i < valuesOperands.Length; i++)
-                valuesOperands[i] = rnd.Next(0, 2);
+                valuesOperands[i] = (byte)rnd.Next(0, 2);
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace KU_17_WIN_MOD
         /// <summary>
         /// Посчитать количество верных клозов
         /// </summary>
-        private bool EqualsTrueClozes(int[] valuesOperands)
+        private bool EqualsTrueClozes(byte[] valuesOperands)
         {
             tempSumTrueFirstClozes = 0;
             tempSumTrueSecondClozes = 0;
@@ -370,9 +370,26 @@ namespace KU_17_WIN_MOD
         {
             CalculateTrueClozes();
             steps.Clear();
-            int[] tempValueOperands = NewTempArray();
+            byte[] tempValueOperands = NewTempArray();
 
             int step;
+            /*
+            Parallel.For(0, maxFlips + 1, (i, state) =>
+            {
+                step = NextStep();
+                tempValueOperands[step] = ChangeValue(tempValueOperands[step]);
+                if (EqualsTrueClozes(tempValueOperands))
+                {
+                    valuesOperands = tempValueOperands;
+                    return;
+                }
+                else
+                {
+                    tempValueOperands[step] = ChangeValue(tempValueOperands[step]);
+                }
+            });*/
+        
+            
             for (int i = 0; i < maxFlips + 1; i++)
             {
                 step = NextStep();
@@ -416,9 +433,9 @@ namespace KU_17_WIN_MOD
         /// Новая ссылка на массив
         /// </summary>
         /// <returns></returns>
-        private int[] NewTempArray()
+        private byte[] NewTempArray()
         {
-            int[] tempValueOperands = new int[valuesOperands.Length];
+            byte[] tempValueOperands = new byte[valuesOperands.Length];
             for (int i = 0; i < tempValueOperands.Length; i++)
                 tempValueOperands[i] = valuesOperands[i];
 
@@ -430,9 +447,10 @@ namespace KU_17_WIN_MOD
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private int ChangeValue(int value)
+        private byte ChangeValue(byte value)
         {
-            return value == 0 ? 1 : 0;
+            if (value.Equals(0)) return 1;
+            else return 0;
         }
         #endregion
 
@@ -448,7 +466,7 @@ namespace KU_17_WIN_MOD
             this.tempRandomClozeChange = new List<int>();
             this.formule = formule;
             this.resultList = new List<string>();
-            this.valuesOperands = new int[allOperands.Count];
+            this.valuesOperands = new byte[allOperands.Count];
             this.rnd = new Random();
             this.maxIterations = _onlyFirstData ? 1 : countOfIterations;
 

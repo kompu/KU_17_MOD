@@ -11,9 +11,11 @@ namespace KU_17_WIN_MOD
     /// </summary>
     class DPLLAlgorithm
     {
+        string[] clozes;
         public bool DPLLMethod(string formule)
         {
-            // do something
+            ParseForDPLL parseDPLL = new ParseForDPLL(formule);
+            clozes = parseDPLL.Clozes;
             return false;
         }
     }
