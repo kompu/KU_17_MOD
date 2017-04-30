@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BruteAlgorithm.cs" />
     <Compile Include="DPLLAlgorithm.cs" />
     <Compile Include="GreedyAlgorithm.cs" />
     <Compile Include="Controller.cs" />

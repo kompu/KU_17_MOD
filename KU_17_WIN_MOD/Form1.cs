@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -12,15 +13,16 @@ namespace KU_17_WIN_MOD
 {
     public partial class Form1 : Form
     {
-        private int maxChartMethods = 2;
-        private int maxChartAverage = 10;
-        private int maxChartexamples = 9;
+        private int maxChartMethods = 3;
+        private int maxChartAverage = 4;
+        private int maxChartexamples = 5;
 
 
 
         private bool allResults;
         private List<string> resList = new List<string>();
         readonly Controller _control = new Controller();
+        private int[] numExampleSymbols;
 
         public Form1()
         {
@@ -29,20 +31,23 @@ namespace KU_17_WIN_MOD
             InitProcessBrute();
             CleanScreen();
 
-             exampleData[0] = "b | a";                                                                                      //ab
-             exampleData[1] = "b | a & b & -c | d & a";                                                                     //abcd
-             exampleData[2] = "b | a & b & -c | d & a & e | f ";                                                            //abcdef
-             exampleData[3] = "b | a & b & -c | d & a & e | f & g & h";                                                     //abcdefgh
-             exampleData[4] = "b | a & b & -c & d & a & e | f & g & h | i | j";                                             //abcdefghij
-             exampleData[5] = "b | a & b & -c & d & a & e | f & g & h | i | j & k | l";                                     //abcdefghijkl
-             exampleData[6] = "b | a & b & -c & d & a & k | f & g & h | i | j & l | e | m & n";                             //abcdefghijklmn
-             exampleData[7] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p";                     //abcdefghijklmnop
-             exampleData[8] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p & q & r";             //abcdefghijklmnopqr
-             exampleData[9] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p & q & r & s | t";     //abcdefghijklmnopqrst
+            exampleData[0] = "b | a & b & -c";                                                                             //abc
+            exampleData[1] = "b | a & b & -c | d & a";                                                                     //abcd
+            exampleData[2] = "b | a & b & -c | d & a & e | f ";                                                            //abcdef
+            exampleData[3] = "b | a & b & -c | d & a & e | f & g & h";                                                     //abcdefgh
+            exampleData[4] = "b | a & b & -c & d & a & e | f & g & h | i | j";                                             //abcdefghij
+            exampleData[5] = "b | a & b & -c & d & a & e | f & g & h | i | j & k | l";                                     //abcdefghijkl
+            exampleData[6] = "b | a & b & -c & d & a & k | f & g & h | i | j & l | e | m & n";                             //abcdefghijklmn
+            exampleData[7] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p";                     //abcdefghijklmnop
+            exampleData[8] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p & q & r";             //abcdefghijklmnopqr
+            exampleData[9] = "b | a & b & -c | d & a & e | f & g & h | i | j & k | l | m & n & o | p & q & r & s | t";     //abcdefghijklmnopqrst
 
-            string final = "date" + " : " + "note";
+            numExampleSymbols = new[] { 3, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 
-
+            foreach (string s in exampleData)
+            {
+                comboBox1.Items.Add(s);
+            }
 
             /*
              exampleData[0] = "a";                                                                                      //ab
@@ -56,6 +61,7 @@ namespace KU_17_WIN_MOD
              exampleData[8] = "b | a & b & -c | d & a & e | f & g & h | i ";                                             //abcdefghij
              exampleData[9] = "b | a & b & -c | d & a & e | f & g & h | i | j";                                             //abcdefghij
               */
+
         }
 
         #region Felippe. Алгоритм полного перебора
@@ -107,7 +113,7 @@ namespace KU_17_WIN_MOD
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
 
-            List<string> resList = _control.InitGreedy(textBoxFormula.Text, OnlyFirstData.Checked);
+            resList = _control.InitGreedy(textBoxFormula.Text, OnlyFirstData.Checked);
 
             PrintData(resList);
         }
@@ -211,50 +217,78 @@ namespace KU_17_WIN_MOD
 
         private void PrintData(List<string> resList)
         {
-            if (printChartProccess) return;
-            if (allResults)
-                foreach (string resText in resList)
-                {
-                    richTextBoxRes.Text += resText + Environment.NewLine;
-                }
+            if (!printChartProccess) //no print info form when create chart
+            {
+                if (allResults)
+                    foreach (string resText in resList)
+                    {
+                        richTextBoxRes.Text += resText + Environment.NewLine;
+                    }
 
-            labelTime.Text = _control.Sw.Elapsed.ToString();
-            int numChar = _control.NumChars;
-            LabelNumChars.Text = numChar.ToString();
-            labelNumComb.Text = Math.Pow(2, numChar).ToString();
-            labelNumTrue.Text = _control.Numtrue.ToString();
+                labelTime.Text = _control.Sw.Elapsed.ToString();
+                int numChar = _control.NumChars;
+                LabelNumChars.Text = numChar.ToString();
+                labelNumComb.Text = Math.Pow(2, numChar).ToString();
+                labelNumTrue.Text = _control.Numtrue.ToString();
+
+            }
+
         }
+
+        private bool chartOne = true;
 
         private void button1_Click(object sender, EventArgs e)
         {
+            chartOne = true;
+            button1.Enabled = !chartOne;
+            chart1.Visible = chartOne;
+            chart2.Visible = !chartOne;
             Createchart(true);
+            button1.Enabled = true;
         }
 
         private void Createchart(bool firstData)
         {
             printChartProccess = true;
+
             chart1.Series.Clear();
+
+            chart2.Series.Clear();
+
+
+
             richTextBoxRes.Text = "";
-            chart1.Series.Add("sd");
+
             //все дата
             OnlyTime.Checked = false;
             OnlyFirstData.Checked = firstData;
+            allResults = !firstData;
 
             progressBar3.Value = 0;
 
             for (int m = 0; m < maxChartMethods; m++)
             {
                 _actualMethod = m + 1;
-                Thread tread = new Thread(loadData4Charts);
-                tread.Start();
-                tread.Join();
+
+                loadData4Charts();
+
                 for (int index = 0; index < 10; index++)
                 {
-                    richTextBoxRes.Text += nameMethods[m] + "- NLetters:" + ((index + 1) * 2).ToString().PadLeft(2, '0') + " aveTime: " + TimeAllData[m, index].ToString("F8") + Environment.NewLine;
+                    richTextBoxRes.Text += nameMethods[m] + "- NLetters:" +
+                                           ((index + 1) * 2).ToString().PadLeft(2, '0') + " aveTime: " +
+                                           TimeAllData[m, index].ToString("F8") + Environment.NewLine;
                 }
                 progressBar3.Value++;
             }
+
+
+
+
             PrintCharts();
+            chart1.ChartAreas[0].AxisX.Minimum = 3;
+            chart1.ChartAreas[0].AxisX.Maximum = (maxChartexamples+1)*2;
+            chart2.ChartAreas[0].AxisX.Minimum = 3;
+            chart2.ChartAreas[0].AxisX.Maximum = (maxChartexamples + 1) * 2;
             printChartProccess = false;
         }
 
@@ -274,16 +308,16 @@ namespace KU_17_WIN_MOD
                     switch (_actualMethod)
                     {
                         case 1:
-                            _control.InitBrute(exampleData[i], allResults);
+                            _control.InitBrute(exampleData[i], !allResults);
                             break;
                         case 2:
-                            _control.InitRandom(exampleData[i], allResults);
+                            _control.InitRandom(exampleData[i], !allResults);
                             break;
                         case 3:
-                            _control.InitGreedy(exampleData[i], allResults);
+                            _control.InitGreedy(exampleData[i], !allResults);
                             break;
                         case 4:
-                            _control.InitDPLL(exampleData[i], allResults);
+                            _control.InitDPLL(exampleData[i], !allResults);
                             break;
                     }
 
@@ -298,12 +332,43 @@ namespace KU_17_WIN_MOD
         {
             for (int m = 0; m < 4; m++)
             {
-                Series series = new Series(nameMethods[m]) { ChartType = SeriesChartType.Spline };
+                Series series = new Series(nameMethods[m])
+                {
+                    ChartType = SeriesChartType.Spline
+
+                };
+
+                series.BorderWidth = 5;
+                switch (m)
+                {
+                    case 0:
+                        series.Color = Color.Red;
+                        break;
+                    case 1:
+                        series.Color = Color.Blue;
+                        break;
+                    case 2:
+                        series.Color = Color.Green;
+                        break;
+                    case 3:
+                        series.Color = Color.Coral;
+                        break;
+                }
+
                 for (int i = 0; i < 10; i++)
                 {
-                    series.Points.AddXY(i * 2, TimeAllData[m, i]);
+                    series.Points.AddXY(numExampleSymbols[i] , TimeAllData[m, i]);
                 }
-                chart1.Series.Add(series);
+                if (chartOne)
+                {
+                    chart1.Series.Add(series);
+                }
+                else
+                {
+                    chart2.Series.Add(series);
+                }
+                    
+                
             }
 
         }
@@ -315,7 +380,17 @@ namespace KU_17_WIN_MOD
 
         private void button2_Click(object sender, EventArgs e)
         {
+            chartOne = false;
+            chart1.Visible = chartOne;
+            chart2.Visible = !chartOne;
+            button2.Enabled = false;
             Createchart(false);
+            button2.Enabled = true;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBoxFormula.Text = comboBox1.Text;
         }
 
     }

@@ -1,491 +1,495 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace KU_17_WIN_MOD
 {
     /// <summary>
-    /// Жадный алгоритм решения SAT
+    /// Парсит формулу на клозы и операнды
     /// </summary>
-    public class GreedyAlgorithm
+    class ParseFormule
     {
-        private List<string> clozes = new List<string>();
-        private List<string> valuesList = new List<string>();
-        private int[] boolListValues;
-        char[] operators = new char[2];
-        List<string> firstStringClosez = new List<string>();
-        List<string> secondStringClozes = new List<string>();
-        int[] firstGood;
-        int[] secondGood;
-        List<string> resultList;
-        bool isSolved = false;
-        Random rnd = new Random();
-        long iterations;
+        private List<char> alphavite;
+        private List<char> allOperands;
+        private List<string> firstClozes;
+        private List<string> secondClozes;
+        private List<string> allClozes;
+        private GreedyAlgorithm greedyAlgorithm;
 
         /// <summary>
-        /// Жадный алгоритм решения SAT 
+        /// Конструктор
         /// </summary>
         /// <param name="formule"></param>
-        /// <returns></returns>
-        public List<string> GreedyMethod(string formule)
+        /// <param name="greedyOptimizeAlgorithm"></param>
+        public ParseFormule(string formule, GreedyAlgorithm greedyAlgorithm)
         {
-            ClearResult();
-            ClearClozesAndValuesList();
-            ClearFirstAndSecondStringClozes();
-
-            clozes = GenerateFormulasListWithClozes(formule);
-            ToSolveClozes();
-            List<string> resultList = this.resultList;
-            return resultList;
+            this.greedyAlgorithm = greedyAlgorithm;
+            allClozes = GenerateFormulasListWithClozes(formule); // генерация операндов и клозов
+            SeparateClozes(); // разбить клозы на 2 группы
+            ReturnValues();
         }
-
-        private void ClearResult()
-        {
-            this.resultList = new List<string>();
-            isSolved = false;
-        }
-
-        private void Print(bool flag)
-        {
-            string result = null;
-            if (flag)
-            {
-                for (int i = 0; i < valuesList.Count; i++)
-                {
-                    result += valuesList[i] + "=" + boolListValues[i] + ", ";
-                }
-                result += ": " + isSolved;
-            }
-            else
-            {
-                result = "Задачу невозможно решить!";
-            }
-            resultList.Add(result);
-        }
-
-        private void ClearClozesAndValuesList()
-        {
-            clozes = new List<string>();
-            valuesList = new List<string>();
-        }
-
-        private void ClearFirstAndSecondStringClozes()
-        {
-            firstStringClosez = new List<string>();
-            secondStringClozes = new List<string>();
-        }
-
-        private void FillFirstAndSecondStringClozes()
-        {
-            for (int i = 0; i < clozes.Count; i++)
-            {
-                if ((i + 2) % 2 == 0) firstStringClosez.Add(clozes[i]);
-                else secondStringClozes.Add(clozes[i]);
-            }
-        }
-
-        private bool ToSolveClozes()
-        {
-            long value = (long)Math.Pow(valuesList.Count, 2) * (long)Math.Pow(2,valuesList.Count)/2;
-            iterations = 0;
-            boolListValues = RandomSetBoolValuesInList();
-            ClearFirstAndSecondStringClozes();
-            FillFirstAndSecondStringClozes();
-            firstGood = new int[firstStringClosez.Count];
-            secondGood = new int[secondStringClozes.Count];
-
-            while (iterations <= value)
-            {
-                ClearFirstAndSecondStringClozes();
-                FillFirstAndSecondStringClozes();
-
-                bool flag1 = LiteralsToDigits(firstStringClosez, false);
-                bool flag2 = LiteralsToDigits(secondStringClozes, true);
-                if (flag1 && flag2)
-                {
-                    isSolved = true;
-                    Print(true);
-                    break;
-                }
-                else
-                {
-                    SetNewBoolValuesInList();
-                }
-                iterations++;
-            }
-
-            if (isSolved)
-            {
-                return true;
-            }
-            else
-            {
-                Print(false);
-                return false;
-            }
-        }
-
 
         /// <summary>
-        /// Переводим из строки клозов с буквами в строку клозов с цифрами
+        /// Вернуть значения
         /// </summary>
-        /// <param name="clozeString"></param>
-        private bool LiteralsToDigits(List<string> clozeString,bool binaryGood)
+        private void ReturnValues()
         {
-            bool flag = false;
-            for (int i = 0;i<clozeString.Count;i++)
-            {
-                string[] charCloze = clozeString[i].Split(this.operators);
-                char charOperator = CheckOperator(clozeString[i]);
-                for (int j = 0;j<2;j++)
-                {
-                    for (int x = 0;x < valuesList.Count;x++)
-                    {
-                        if (charCloze[j].Equals(valuesList[x]))
-                        {
-                            charCloze[j] = boolListValues[x].ToString();
-                            break;
-                        }
-                        else if (charCloze[j].Equals("-"+valuesList[x]))
-                        {
-                            charCloze[j] = boolListValues[x].ToString();
-                            if (charCloze[j].Equals("1")) charCloze[j] = "0";
-                            else charCloze[j] = "1";
-                            break;
-                        }
-                    }
-                   
-                }
-                clozeString[i] = charCloze[0] + charOperator + charCloze[1];
-                if (binaryGood)
-                {
-                    secondGood[i] = CheckClozeString(charCloze[0] + charCloze[1], charOperator);
-                    flag = CheckCorrectGood(true);
-                }
-                else
-                {
-                    firstGood[i] = CheckClozeString(charCloze[0] + charCloze[1], charOperator);
-                    flag = CheckCorrectGood(false);
-                }
-               
-            }
-            return flag;
+            greedyAlgorithm.allOperands = allOperands;
+            greedyAlgorithm.alphavite = alphavite;
+            greedyAlgorithm.firstClozes = firstClozes;
+            greedyAlgorithm.secondClozes = secondClozes;
+            greedyAlgorithm.allClozes = allClozes;
         }
 
-        public bool CheckCorrectGood(bool binaryGood)
-        {
-            int sum = 0;
-            bool flag = false;
-
-            if (!binaryGood)
-            {
-                foreach (int i in firstGood)
-                {
-                    sum += i;
-                }
-                flag = sum == firstGood.Length ? true : false;
-            }
-            else
-            {
-                foreach (int i in secondGood)
-                {
-                    sum += i;
-                }
-                flag = sum == secondGood.Length ? true : false;
-            }
-
-            return flag;
-        }
-
-        private int CheckTheBiggestStringOfClozes()
-        {
-            int flag = 0;
-            int sum = 0;
-            bool flagFirst;
-            bool flagSecond;
-
-            foreach (int i in firstGood)
-            {
-                sum += i;
-            }
-            flagFirst = sum == firstGood.Length ? true : false;
-            sum = 0;
-            foreach (int i in secondGood)
-            {
-                sum += i;
-            }
-            flagSecond = sum == secondGood.Length ? true : false;
-
-            if (flagFirst && !flagSecond) flag = 1;
-            else if (!flagFirst && flagSecond) flag = 2;
-            else flag = 0;
-
-            return flag;
-        }
-
-        public int CheckClozeString(string clozeString,char charOperator)
-        {
-            int flag = 0;
-            if (charOperator.Equals('|'))
-                flag = clozeString.Equals("00") ? 0 : 1;
-            else
-                flag = clozeString.Equals("11") ? 1 : 0;
-
-            return flag;
-        }
-            
-
+        #region Получить клозы и операнды
         /// <summary>
-        /// Возвращаем оператор клоза
-        /// </summary>
-        /// <param name="cloze"></param>
-        /// <returns></returns>
-        private char CheckOperator(string cloze)
-        {
-            char[] charCloze = cloze.ToCharArray();
-            char charOperator = '0';
-
-            for (int i = 0; i < charCloze.Length; i++)
-            {
-                for (int j = 0;j<operators.Length;j++)
-                {
-                    if (charCloze[i].Equals(operators[j]))
-                    {
-                        charOperator = operators[j];
-                        return charOperator;
-                    }
-                }
-
-            }
-            return charOperator;
-        }
-
-        /// <summary>
-        /// Случайно задаем начальные значения переменных
-        /// </summary>
-        /// <param name="boolListValues"></param>
-        /// <returns></returns>
-        private int[] RandomSetBoolValuesInList()
-        {
-
-            int[] boolListValues = new int[this.valuesList.Count];
-            for (int i = 0;i<boolListValues.Length;i++)
-                boolListValues[i] = rnd.Next(0,2);
-
-            return boolListValues;
-        }
-
-        private void SetNewBoolValuesInList()
-        {
-            int i = 0;
-            int j = 0;
-            int fromCloze = 0;
-            string cloze = null;
-            int flag = CheckTheBiggestStringOfClozes();
-            bool firstOrSecond = false;
-
-            if (flag == 0)
-            {
-                firstOrSecond = rnd.NextDouble() > 0.5f ? true : false;
-            }
-            else if (flag == 2)
-            {
-                firstOrSecond = true;
-            }
-            else if (flag == 1)
-            {
-                firstOrSecond = false;
-            }
-
-            if (firstOrSecond)
-            {
-                for (i = 0; i < firstGood.Length;)
-                {
-                    if (firstGood[i] != 1)
-                    {
-                        cloze = firstStringClosez[i];
-                        fromCloze = i * 2;
-                        break;
-                    }
-                    i++;
-                }
-            }
-            else if (!firstOrSecond || cloze == null)
-            {
-                for (j = 0; j < secondGood.Length;j++)
-                {
-                    if (secondGood[j] != 1)
-                    {
-                        cloze = secondStringClozes[j];
-                        if (j >= 1) fromCloze = j * 2 - 1;
-                        else fromCloze = 1;
-                        break;
-                    }
-                }
-            }
-            // выдает ошибку отсутствия клоза, если идем не по той строке 
-            // (если первая строка клозов 1/1 а вторая 0/1, 
-            // но мы идем по первой. 
-            // проверка на сумму нужна
-            string[] charCloze = cloze.Split(operators);
-
-            if (charCloze[0].Equals("0"))
-            {
-                string[] s = clozes[fromCloze].Split(operators);
-                for (int x = 0;x<valuesList.Count;x++)
-                {
-                    if (s[0].Equals(valuesList[x]))
-                    {
-                        if (boolListValues[x] == 0)
-                        {
-                            boolListValues[x] = 1;
-                            break;
-                        }
-                        else
-                        {
-                            boolListValues[x] = 0;
-                            break;
-                        }
-                    }
-                    else if (s[0].Equals("-"+valuesList[x]))
-                    {
-                        if (boolListValues[x] == 0)
-                        {
-                            boolListValues[x] = 1;
-                            break;
-                        }
-                        else
-                        {
-                            boolListValues[x] = 0;
-                            break;
-                        }
-                    }
-                }
-            }
-            else if (charCloze[1].Equals("0"))
-            {
-                string[] s = clozes[fromCloze].Split(operators);
-                for (int x = 0; x < valuesList.Count; x++)
-                {
-                    if (s[1].Equals(valuesList[x]))
-                    {
-                        if (boolListValues[x] == 0)
-                        {
-                            boolListValues[x] = 1;
-                            break;
-                        }
-                        else
-                        {
-                            boolListValues[x] = 0;
-                            break;
-                        }
-                        
-                    }
-                    else if ((s[1].Equals("-"+valuesList[x])))
-                    {
-                        if (boolListValues[x] == 0)
-                        {
-                            boolListValues[x] = 1;
-                            break;
-                        }
-                        else
-                        {
-                            boolListValues[x] = 0;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Создаем из строки лист с формулами, которые разбиты на клозы
+        /// Разбить строку на строку клозов
         /// </summary>
         /// <param name="formule"></param>
         /// <returns></returns>
         private List<string> GenerateFormulasListWithClozes(string formule)
         {
-            List<string> generatedListClozes = new List<string>(); // лист с выходными формулами
-            this.operators[0] = '&';
-            this.operators[1] = '|';
-            char[] opT = new char[27];
-            opT[0] = 'a';
-            opT[1] = 'b';
-            opT[2] = 'c';
-            opT[3] = 'd';
-            opT[4] = 'e';
-            opT[5] = 'f';
-            opT[6] = 'g';
-            opT[7] = 'h';
-            opT[8] = 'i';
-            opT[9] = 'g';
-            opT[10] = 'k';
-            opT[11] = 'l';
-            opT[12] = 'm';
-            opT[13] = 'n';
-            opT[14] = 'o';
-            opT[15] = 'p';
-            opT[16] = 'q';
-            opT[17] = 'r';
-            opT[18] = 's';
-            opT[19] = 't';
-            opT[20] = 'u';
-            opT[21] = 'v';
-            opT[22] = 'w';
-            opT[23] = 'x';
-            opT[24] = 'y';
-            opT[25] = 'z';
-            opT[26] = '-';
+            alphavite = new List<char>(); // алфавит
+            alphavite = GenerateAlphavite(alphavite); // генерация алфавита
 
-            string[] operands = formule.Split(this.operators);
-            string[] operators = formule.Split(opT);
-            List<string> operandsFull = new List<string>();
-            List<string> operatorsFull = new List<string>();
+            List<char> sequenceOperators = new List<char>(); // все операнды из формулы
+            sequenceOperators = FindSequenceOperatorsInFormule(formule); // получаем все операнды из формулы
 
-            for (int i = 0;i<operands.Length;i++)
-            {
-                if (operands[i] != "")
-                {
-                    operandsFull.Add(operands[i]);
-                }
-            }
-            for (int i = 0; i < operators.Length; i++)
-            {
-                if (operators[i] != "")
-                {
-                    operatorsFull.Add(operators[i]);
-                }
-            }
+            List<string> sequenceOperands = new List<string>(); // последовательность операндов из формулы
+            sequenceOperands = FindSequenceOperandsInFormule(formule, alphavite); // получаем последовательность операндов из формулы
 
-            for (int j = 0; j < operands.Length-1; j++)
-            {
-                generatedListClozes.Add(operandsFull[j] + operatorsFull[j] + operandsFull[j + 1]);
-            }
+            this.allOperands = new List<char>(); // все операнды из формулы
+            allOperands = FindAllOperandsInFormule(formule, alphavite); // получаем все операнды из формулы
 
-            SetListValues(operandsFull);
-            return generatedListClozes;
+            return GeneratedListClozes(sequenceOperands, sequenceOperators);
         }
 
-        private void SetListValues(List<string> valuesList)
+        /// <summary>
+        /// Разбить клозы на 2 группы
+        /// </summary>
+        private void SeparateClozes()
         {
-            bool flag;
-            for (int i = 0;i< valuesList.Count;i++)
+            firstClozes = new List<string>();
+            secondClozes = new List<string>();
+            for (int i = 0; i < allClozes.Count; i++)
             {
-                flag = false;
-                char[] chars = valuesList[i].ToCharArray();
+                if ((i + 2) % 2 == 0) firstClozes.Add(allClozes[i]);
+                else secondClozes.Add(allClozes[i]);
+            }
+        }
 
-                for (int j = 0;j<this.valuesList.Count;j++)
+        /// <summary>
+        /// Найти последовательсть всех операторов в формуле
+        /// </summary>
+        /// <param name="formule"></param>
+        /// <returns></returns>
+        private List<char> FindSequenceOperatorsInFormule(string formule)
+        {
+            List<char> allOperators = new List<char>();
+            char[] chars = formule.ToCharArray();
+
+            foreach (char ch in chars)
+                if (ch.Equals('|') || ch.Equals('&')) allOperators.Add(ch);
+
+            return allOperators;
+        }
+
+        /// <summary>
+        /// Сгенерировать лист с клозами
+        /// </summary>
+        /// <param name="operands"></param>
+        /// <param name="operators"></param>
+        /// <returns></returns>
+        private List<string> GeneratedListClozes(List<string> operands, List<char> operators)
+        {
+            List<string> list = new List<string>();
+            for (int i = 0; i < operands.Count - 1; i++)
+            {
+                list.Add(operands[i] + operators[i] + operands[i + 1]);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Получить последовательность всех операндов из формулы
+        /// </summary>
+        /// <param name="formule"></param>
+        /// <param name="alphavite"></param>
+        /// <returns></returns>
+        private List<string> FindSequenceOperandsInFormule(string formule, List<char> alphavite)
+        {
+            List<string> sequence = new List<string>();
+            char[] formuleChars = formule.ToCharArray();
+
+            for (int j = 0; j < formuleChars.Length; j++)
+            {
+                for (int i = 0; i < alphavite.Count; i++)
                 {
-                    if (this.valuesList[j].Equals(chars[chars.Length-1].ToString()))
+                    if (formuleChars[j].Equals('|') || formuleChars[j].Equals('&') || formuleChars[j].Equals('-')) break;
+                    if (formuleChars[j].Equals(alphavite[i]))
                     {
-                        flag = true;
+                        if (j >= 1 && formuleChars[j - 1].Equals('-'))
+                            sequence.Add("-" + alphavite[i].ToString());
+                        else sequence.Add(alphavite[i].ToString());
                         break;
                     }
                 }
-                if (!flag)
+            }
+            return sequence;
+        }
+
+        /// <summary>
+        /// Получить операнды из формулы
+        /// </summary>
+        /// <param name="formule"></param>
+        /// <param name="alphavite"></param>
+        /// <returns></returns>
+        private List<char> FindAllOperandsInFormule(string formule, List<char> alphavite)
+        {
+            List<char> allOperands = new List<char>();
+            char[] formuleChars = formule.ToCharArray();
+
+            foreach (char ch in formuleChars)
+            {
+                foreach (char operand in alphavite)
+                    if (ch.Equals(operand)) allOperands = AddTolistOfOperands(allOperands, operand);
+            }
+
+            return allOperands;
+        }
+
+        /// <summary>
+        /// Добавить в лист операндов, проверив, нет ли совпадений
+        /// </summary>
+        private List<char> AddTolistOfOperands(List<char> allOperands, char operand)
+        {
+            bool isNotSame = true;
+            foreach (char operandFromList in allOperands)
+                if (operandFromList.Equals(operand)) { isNotSame = false; break; }
+            if (isNotSame) allOperands.Add(operand);
+
+            return allOperands;
+        }
+
+        /// <summary>
+        /// Генерация алфавита
+        /// </summary>
+        /// <param name="operators"></param>
+        /// <returns></returns>
+        private List<char> GenerateAlphavite(List<char> operands)
+        {
+            operands.Add('a');
+            operands.Add('b');
+            operands.Add('c');
+            operands.Add('d');
+            operands.Add('e');
+            operands.Add('f');
+            operands.Add('g');
+            operands.Add('h');
+            operands.Add('i');
+            operands.Add('j');
+            operands.Add('k');
+            operands.Add('l');
+            operands.Add('m');
+            operands.Add('n');
+            operands.Add('o');
+            operands.Add('p');
+            operands.Add('q');
+            operands.Add('r');
+            operands.Add('s');
+            operands.Add('t');
+            operands.Add('u');
+            operands.Add('v');
+            operands.Add('w');
+            operands.Add('x');
+            operands.Add('y');
+            operands.Add('z');
+
+            return operands;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    /// Жадный алгоритм
+    /// </summary>
+    class GreedyAlgorithm
+    {
+        private string formule; // наша формула
+        public List<string> resultList; // лист с правильными ответами
+        public List<string> allClozes; // все клозы
+        public List<string> firstClozes; // лист с первыми клозами
+        public List<string> secondClozes; // лист со вторыми клозами
+        public int sumTrueFirstClozes; // сумма всех правильных клозов из первого листа
+        public int sumTrueSecondClozes; // сумма всех правильных клозов из второго листа
+        public List<char> alphavite;
+        public List<char> allOperands;
+        private List<int> steps;
+        private List<int> tempRandomClozeChange;
+        private int[] valuesOperands;
+
+        public long maxIterations;
+        public int maxFlips;
+        private Random rnd;
+        private ParseFormule parseFormule;
+
+        int tempSumTrueFirstClozes;
+        int tempSumTrueSecondClozes;
+        string firstString;
+        string secondString;
+        private bool _onlyFirstData;
+
+        /// <summary>
+        /// Жадный метод решения задачи SAT
+        /// </summary>
+        /// <param name="initFormula"></param>
+        /// <param name="onlyFirstData"></param>
+        /// <param name="countOfIterations"></param>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        public List<string> GreedyMethod(string initFormula, bool onlyFirstData, int countOfIterations = 1000)
+        {
+            _onlyFirstData = onlyFirstData;
+            Initialisation(initFormula, countOfIterations);
+            Algorithm();
+            return Finalization();
+        }
+
+        #region Алгоритм
+        /// <summary>
+        /// Запуск алгоритма
+        /// </summary>
+        /// <returns></returns>
+        private bool Algorithm()
+        {
+            RandomValuesOperands(); // задаем начальные значения
+            maxFlips = valuesOperands.Length - 1;
+            long iterations = 0;
+
+            while (resultList.Count < maxIterations)
+            {
+                FlipAndCalculate(); // изменяем значение переменной, чтобы изменилось максимальное количество клозов
+                if (CheckCorrectly(this.formule)) // 
                 {
-                    this.valuesList.Add(chars[chars.Length - 1].ToString());
+                    Print();
+                    RandomValuesOperands();
+                }
+                iterations++;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Проверить строку клозов на правильность
+        /// </summary>
+        /// <param name="listOfClozes"></param>
+        /// <returns></returns>
+        private bool CheckCorrectly(string formule)
+        {
+            string fornuleTemp = formule;
+            for (int i = 0; i < valuesOperands.Length; i++)
+                fornuleTemp = fornuleTemp.Replace(allOperands[i].ToString(), valuesOperands[i].ToString());
+
+            return ReplaceOrAnd.WorkWithOrAndV2(fornuleTemp);
+        }
+
+        /// <summary>
+        /// Случайная генерация значений операндов
+        /// </summary>
+        private void RandomValuesOperands()
+        {
+            for (int i = 0; i < valuesOperands.Length; i++)
+                valuesOperands[i] = rnd.Next(0, 2);
+        }
+
+        /// <summary>
+        /// Посчитать количество верных клозов
+        /// </summary>
+        private void CalculateTrueClozes()
+        {
+            sumTrueFirstClozes = 0;
+            sumTrueSecondClozes = 0;
+
+            for (int i = 0; i < firstClozes.Count; i++)
+            {
+                string firstString = firstClozes[i];
+                for (int j = 0; j < valuesOperands.Length; j++)
+                    firstString = firstString.Replace(allOperands[j], char.Parse(valuesOperands[j].ToString()));
+
+                if (ReplaceOrAnd.WorkWithOrAndV2(firstString))
+                {
+                    sumTrueFirstClozes++;
+                }
+            }
+            for (int i = 0; i < secondClozes.Count; i++)
+            {
+                string secondString = secondClozes[i];
+                for (int j = 0; j < valuesOperands.Length; j++)
+                    secondString = secondString.Replace(allOperands[j], char.Parse(valuesOperands[j].ToString()));
+
+                if (ReplaceOrAnd.WorkWithOrAndV2(secondString))
+                {
+                    sumTrueSecondClozes++;
                 }
             }
         }
+
+        /// <summary>
+        /// Посчитать количество верных клозов
+        /// </summary>
+        private bool EqualsTrueClozes(int[] valuesOperands)
+        {
+            tempSumTrueFirstClozes = 0;
+            tempSumTrueSecondClozes = 0;
+
+            for (int i = 0; i < firstClozes.Count; i++)
+            {
+                firstString = firstClozes[i];
+                if (i < secondClozes.Count) secondString = secondClozes[i];
+
+                for (int j = 0; j < valuesOperands.Length; j++)
+                {
+                    firstString = firstString.Replace(allOperands[j], char.Parse(valuesOperands[j].ToString()));
+                    secondString = secondString.Replace(allOperands[j], char.Parse(valuesOperands[j].ToString()));
+                }
+
+                if (ReplaceOrAnd.WorkWithOrAndV2(firstString)) tempSumTrueFirstClozes++;
+                if (ReplaceOrAnd.WorkWithOrAndV2(secondString)) tempSumTrueSecondClozes++;
+            }
+
+            return tempSumTrueFirstClozes + tempSumTrueSecondClozes >= this.sumTrueFirstClozes + this.sumTrueSecondClozes ? true : false;
+        }
+
+        /// <summary>
+        /// Изменить значение переменной и чекнуть
+        /// </summary>
+        private void FlipAndCalculate()
+        {
+            CalculateTrueClozes();
+            steps.Clear();
+            int[] tempValueOperands = NewTempArray();
+
+            int step;
+            for (int i = 0; i < maxFlips + 1; i++)
+            {
+                step = NextStep();
+                tempValueOperands[step] = ChangeValue(tempValueOperands[step]);
+                if (EqualsTrueClozes(tempValueOperands))
+                {
+                    valuesOperands = tempValueOperands;
+                    break;
+                }
+                else
+                {
+                    tempValueOperands[step] = ChangeValue(tempValueOperands[step]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Следующий шаг для итерационного процесса
+        /// </summary>
+        /// <returns></returns>
+        private int NextStep()
+        {
+            int newStep = rnd.Next(0, valuesOperands.Length);
+            for (int i = 0; i < steps.Count; )
+            {
+                if (newStep == steps[i])
+                {
+                    newStep = rnd.Next(0, valuesOperands.Length);
+                    i = 0;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            steps.Add(newStep);
+            return newStep;
+        }
+
+        /// <summary>
+        /// Новая ссылка на массив
+        /// </summary>
+        /// <returns></returns>
+        private int[] NewTempArray()
+        {
+            int[] tempValueOperands = new int[valuesOperands.Length];
+            for (int i = 0; i < tempValueOperands.Length; i++)
+                tempValueOperands[i] = valuesOperands[i];
+
+            return tempValueOperands;
+        }
+
+        /// <summary>
+        /// Изменить значение переменной
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private int ChangeValue(int value)
+        {
+            return value == 0 ? 1 : 0;
+        }
+        #endregion
+
+        #region Вывод и хранение данных
+        /// <summary>
+        /// Инициализация переменных при запуске метода
+        /// </summary>
+        /// <param name="formule"></param>
+        private void Initialisation(string formule, int countOfIterations)
+        {
+            this.steps = new List<int>();
+            parseFormule = new ParseFormule(formule, this);
+            this.tempRandomClozeChange = new List<int>();
+            this.formule = formule;
+            this.resultList = new List<string>();
+            this.valuesOperands = new int[allOperands.Count];
+            this.rnd = new Random();
+            this.maxIterations = _onlyFirstData ? 1 : countOfIterations;
+
+        }
+
+        /// <summary>
+        /// Окончание работы метода
+        /// </summary>
+        private List<string> Finalization()
+        {
+            string emptyString = "Решения не было найдено!";
+            if (resultList.Count == 0) resultList.Add(emptyString);
+
+            return resultList;
+        }
+
+        /// <summary>
+        /// Добавить в лист
+        /// </summary>
+        /// <param name="newResult"></param>
+        private bool AddToList(string newResult)
+        {
+            foreach (string result in resultList)
+                if (result.Equals(newResult)) return false;
+            resultList.Add(newResult);
+            return true;
+        }
+
+        /// <summary>
+        /// Печать
+        /// </summary>
+        /// <param name="flag"></param>
+        private void Print()
+        {
+            string result = null;
+            for (int i = 0; i < valuesOperands.Length; i++)
+                result += allOperands[i] + "=" + valuesOperands[i] + ", ";
+            result += ": " + true;
+
+            AddToList(result);
+        }
+        #endregion
     }
 }
