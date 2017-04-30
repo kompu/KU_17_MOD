@@ -272,7 +272,7 @@ namespace KU_17_WIN_MOD
             while (resultList.Count < maxIterations)
             {
                 FlipAndCalculate(); // изменяем значение переменной, чтобы изменилось максимальное количество клозов
-                if (CheckCorrectly(formule)) 
+                if (CheckCorrectly(formule))
                 {
                     Print();
                     RandomValuesOperands();
@@ -388,8 +388,8 @@ namespace KU_17_WIN_MOD
                     tempValueOperands[step] = ChangeValue(tempValueOperands[step]);
                 }
             });*/
-        
-            
+
+
             for (int i = 0; i < maxFlips + 1; i++)
             {
                 step = NextStep();
