@@ -13,9 +13,9 @@ namespace KU_17_WIN_MOD
 {
     public partial class Form1 : Form
     {
-        private int maxChartMethods = 3;
-        private int maxChartAverage = 4;
-        private int maxChartexamples = 5;
+        private int maxChartMethods = 4;
+        private int maxChartAverage = 10;
+        private int maxChartexamples = 10;
 
 
 
@@ -30,6 +30,10 @@ namespace KU_17_WIN_MOD
             OnlyTime.Checked = false;
             InitProcessBrute();
             CleanScreen();
+
+            progressBarOne.Maximum = maxChartAverage;
+            progressBarMethod.Maximum = maxChartexamples;
+
 
             exampleData[0] = "b | a & b & -c";                                                                             //abc
             exampleData[1] = "b | a & b & -c | d & a";                                                                     //abcd
@@ -264,7 +268,7 @@ namespace KU_17_WIN_MOD
             OnlyFirstData.Checked = firstData;
             allResults = !firstData;
 
-            progressBar3.Value = 0;
+            progressBarTotal.Value = 0;
 
             for (int m = 0; m < maxChartMethods; m++)
             {
@@ -278,7 +282,7 @@ namespace KU_17_WIN_MOD
                                            ((index + 1) * 2).ToString().PadLeft(2, '0') + " aveTime: " +
                                            TimeAllData[m, index].ToString("F8") + Environment.NewLine;
                 }
-                progressBar3.Value++;
+                progressBarTotal.Value++;
             }
 
 
@@ -300,8 +304,10 @@ namespace KU_17_WIN_MOD
 
         private void loadData4Charts()
         {
+            progressBarMethod.Value = 0;
             for (int i = 0; i < maxChartexamples; i++)
             {
+                progressBarOne.Value = 0;
                 TimeSpan span = TimeSpan.Zero;
                 for (int a = 0; a < maxChartAverage; a++)
                 {
@@ -319,10 +325,13 @@ namespace KU_17_WIN_MOD
                         case 4:
                             _control.InitDPLL(exampleData[i], !allResults);
                             break;
+
                     }
 
                     span += _control.Sw.Elapsed;
+                    progressBarOne.Value++;
                 }
+                progressBarMethod.Value++;
                 TimeAllData[_actualMethod - 1, i] = Math.Round((Double)span.TotalSeconds / (Double)maxChartAverage, 10);
             }
         }

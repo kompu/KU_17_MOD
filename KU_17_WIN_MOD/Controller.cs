@@ -18,6 +18,7 @@ namespace KU_17_WIN_MOD
         private readonly RandomAlgorithm _randomAlgorithm = new RandomAlgorithm();
         private readonly BruteAlgorithm _bruteAlgorithm = new BruteAlgorithm();
         private readonly DPLLAlgorithm _dllAlgorithm = new DPLLAlgorithm();
+        List<string> resultList = new List<string>();
 
         internal List<string> InitBrute(string input, bool onlyFirstData)
         {
@@ -26,7 +27,7 @@ namespace KU_17_WIN_MOD
             Sw.Start();
             string[] local = input.Split(new[] { ' ', '|', '&', '-' }, StringSplitOptions.RemoveEmptyEntries);
             
-            List<string> resultList = _bruteAlgorithm.initAlgorithm(local, onlyFirstData, input); // решение жадным методом
+            resultList = _bruteAlgorithm.initAlgorithm(local, onlyFirstData, input); // решение жадным методом
             Numtrue = resultList.Count; 
             Sw.Stop();
             return resultList;
@@ -34,12 +35,11 @@ namespace KU_17_WIN_MOD
 
         internal List<string> InitGreedy(string input, bool onlyFirstData)
         {
-            Sw.Reset();
-            Sw.Start();
             string[] local = input.Split(new[] { ' ', '|', '&', '-' }, StringSplitOptions.RemoveEmptyEntries);
             int numresults = _bruteAlgorithm.initAlgorithm(local, onlyFirstData, input).Count;
             
-
+            Sw.Reset();
+            Sw.Start();
             
             List<string> resultList = new List<string>();
 
@@ -51,8 +51,6 @@ namespace KU_17_WIN_MOD
             Sw.Stop();
             return resultList;
         }
-
-
 
         internal List<string> InitRandom(string input, bool onlyFirstData)
         {
@@ -103,14 +101,14 @@ namespace KU_17_WIN_MOD
                     int ubicacoin = letternum[i.Key];
                     string resulado = actualComb[ubicacoin].ToString();
                     local3 = local3.Replace(i.Key, resulado);
-                    tempstring += i.Key + ": " + resulado + ", ";
+                    tempstring += i.Key + "=" + resulado + ", ";
                 }
 
                 bool resultad = ReplaceOrAnd.WorkWithOrAndV2(local3);
 
                 if (resultad)
                 {
-                    resultList.Add(tempstring + " ||  " + local3 + " : " + resultad);
+                    resultList.Add(tempstring + ": " + resultad);
                     Numtrue++;
                     if (onlyFirstData) break;
                 }
@@ -120,32 +118,25 @@ namespace KU_17_WIN_MOD
             return resultList;
         }
 
-        internal List<string> InitDPLL(string input, bool checkBoxAlllines)
+        internal List<string> InitDPLL(string input, bool onlyFirstData)
         {
             Numtrue = 0;
             Sw.Reset();
             Sw.Start();
             string[] local = input.Split(new[] { ' ', '|', '&', '-' }, StringSplitOptions.RemoveEmptyEntries);
-            List<string> resultList = new List<string>();
 
-            Dictionary<string, int> letternum = new Dictionary<string, int>();
-
-            int count = 0;
-            foreach (string t in local)
+            if (onlyFirstData)
             {
-                if (letternum.ContainsKey(t)) continue;
-                letternum.Add(t, count);
-                count++;
+            resultList = _dllAlgorithm.DPLLMethodFirstData(local, input); // решение жадным методом    
             }
+            else
+            {
+                resultList = _dllAlgorithm.DPLLMethodAllData(local, input); // решение жадным методом
+                
+            }
+            
 
-            NumChars = letternum.Count;
-
-            List<char[]> ses = new Combinations().Combine(letternum.Count);
-
-            string local2 = input.Replace(" ", "").Replace("^", ",").Replace("v", ".");
-
-            _dllAlgorithm.DPLLMethod(local2); // решение жадным методом
-
+            Numtrue = resultList.Count;
             Sw.Stop();
             return resultList;
         }

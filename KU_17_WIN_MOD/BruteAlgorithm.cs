@@ -35,13 +35,13 @@ namespace KU_17_WIN_MOD
                     int ubicacoin = letternum[i.Key];
                     string resulado = se[ubicacoin].ToString();
                     local3 = local3.Replace(i.Key, resulado);
-                    tempstring += i.Key + ": " + resulado + ", ";
+                    tempstring += i.Key + "=" + resulado + ", ";
                 }
 
                 bool resultad = ReplaceOrAnd.WorkWithOrAndV2(local3);
 
                 if (!resultad) continue;
-                resultList.Add(tempstring + " ||  " + local3 + " : " + resultad);
+                resultList.Add(tempstring + ": " + resultad);
                 if (onlyFirstData) break;
             }
             return resultList;
