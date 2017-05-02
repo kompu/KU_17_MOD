@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -18,15 +19,17 @@ namespace KU_17_WIN_MOD
         List<string> resultList = new List<string>();
         Dictionary<string, int> letternum = new Dictionary<string, int>();
         Dictionary<int, string> letter1 = new Dictionary<int, string>();
-        private bool _issolved;
+        private bool issolved;
         private bool allBad = false;
-
+        public int _numChars;
         private byte[] letterState;
-
-        public List<string> DPLLMethodAllData(string[] local, string input)
+        Stopwatch sw = new Stopwatch();
+        public List<string> DPLLMethodAllData(string[] local, string input, int maxtime)
         {
+            sw.Reset();
+            sw.Start();
             Clean();
-
+            _maxtime = maxtime;
 
 
             string local2 = input.Replace(" ", "").Replace("^", ",").Replace("v", ".");
@@ -49,21 +52,22 @@ namespace KU_17_WIN_MOD
                 letterState[i] = 1;
             }
 
-            
+            bool isLeft = false;
 
             AlgorithmAllData(local2, ses);
 
 
 
 
-
-
+            sw.Stop();
+            _numChars = letternum.Count;
             return resultList;
         }
+        private int _maxtime;
 
         private void AlgorithmAllData(string local2, List<char[]> ses)
         {
-            
+            byte value = 0;
 
             string[] clauses = divideClause(local2);
             Dictionary<string, char> fixedletters = new Dictionary<string, char>();
@@ -196,18 +200,26 @@ namespace KU_17_WIN_MOD
 
             foreach (char[] c in finalList)
             {
+                if (sw.Elapsed.TotalSeconds >= _maxtime)
+                {
+                    break;
+                }
                 if (CheckCorrectly(local2, c))
                 {
                     Print(c);
                 }
             }
+
+            _numChars = letternum.Count;
         }
 
 
-        public List<string> DPLLMethodFirstData(string[] local, string input)
+        public List<string> DPLLMethodFirstData(string[] local, string input, int maxtime)
         {
-
+            _maxtime = maxtime;
             Clean();
+            sw.Reset();
+            sw.Start();
 
             string local2 = input.Replace(" ", "").Replace("^", ",").Replace("v", ".");
             int count = 0;
@@ -229,13 +241,13 @@ namespace KU_17_WIN_MOD
             }
 
             bool isLeft = false;
-
+            
             Algorithm(local2, isLeft);
 
             if (resultList.Count <= 0)
             {
                 allBad = false;
-                _issolved = false;
+                issolved = false;
                 isLeft = true;
 
 
@@ -249,7 +261,7 @@ namespace KU_17_WIN_MOD
 
 
 
-
+            sw.Stop();
             return resultList;
         }
 
@@ -263,6 +275,10 @@ namespace KU_17_WIN_MOD
 
             for (int i = 0; i < letternum.Count; i++)
             {
+                if (sw.Elapsed.TotalSeconds >= _maxtime)
+                {
+                    break;
+                }
                 if (allBad)
                 {
                     i--;
@@ -284,7 +300,7 @@ namespace KU_17_WIN_MOD
                     if (CheckCorrectly(local2))
                     {
                         Print();
-                        _issolved = true;
+                        issolved = true;
                         break;
                     }
 
@@ -326,7 +342,7 @@ namespace KU_17_WIN_MOD
             letternum.Clear();
             letter1.Clear();
             allBad = false;
-            _issolved = false;
+            issolved = false;
         }
 
         private void Print(char[] values)

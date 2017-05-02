@@ -64,10 +64,13 @@
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.progressBarMethod = new System.Windows.Forms.ProgressBar();
             this.progressBarOne = new System.Windows.Forms.ProgressBar();
+            this.maxTime = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxTime)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonBrute
@@ -82,6 +85,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.maxTime);
             this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.OnlyFirstData);
             this.groupBox1.Controls.Add(this.OnlyTime);
@@ -113,9 +118,9 @@
             this.OnlyFirstData.AutoSize = true;
             this.OnlyFirstData.Location = new System.Drawing.Point(15, 98);
             this.OnlyFirstData.Name = "OnlyFirstData";
-            this.OnlyFirstData.Size = new System.Drawing.Size(158, 17);
+            this.OnlyFirstData.Size = new System.Drawing.Size(160, 17);
             this.OnlyFirstData.TabIndex = 10;
-            this.OnlyFirstData.Text = "только Первый ресультат";
+            this.OnlyFirstData.Text = "Только Первый результат";
             this.OnlyFirstData.UseVisualStyleBackColor = true;
             // 
             // OnlyTime
@@ -123,9 +128,9 @@
             this.OnlyTime.AutoSize = true;
             this.OnlyTime.Location = new System.Drawing.Point(15, 121);
             this.OnlyTime.Name = "OnlyTime";
-            this.OnlyTime.Size = new System.Drawing.Size(170, 17);
+            this.OnlyTime.Size = new System.Drawing.Size(172, 17);
             this.OnlyTime.TabIndex = 9;
-            this.OnlyTime.Text = "только время и комбинации";
+            this.OnlyTime.Text = "Только время и комбинации";
             this.OnlyTime.UseVisualStyleBackColor = true;
             // 
             // buttonDPLL
@@ -227,11 +232,11 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label7.Location = new System.Drawing.Point(424, 26);
+            this.label7.Location = new System.Drawing.Point(331, 26);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(160, 20);
+            this.label7.Size = new System.Drawing.Size(248, 20);
             this.label7.TabIndex = 5;
-            this.label7.Text = "Кол-во комбинаций:";
+            this.label7.Text = "Кол-во возможных комбинаций:";
             // 
             // richTextBoxRes
             // 
@@ -374,6 +379,27 @@
             this.progressBarOne.Size = new System.Drawing.Size(461, 23);
             this.progressBarOne.TabIndex = 13;
             // 
+            // maxTime
+            // 
+            this.maxTime.Location = new System.Drawing.Point(448, 118);
+            this.maxTime.Name = "maxTime";
+            this.maxTime.Size = new System.Drawing.Size(46, 20);
+            this.maxTime.TabIndex = 12;
+            this.maxTime.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(389, 120);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "MaxTime:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -403,6 +429,7 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxTime)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -438,6 +465,8 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.ProgressBar progressBarMethod;
         private System.Windows.Forms.ProgressBar progressBarOne;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown maxTime;
     }
 }
 

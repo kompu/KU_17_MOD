@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -235,12 +236,15 @@ namespace KU_17_WIN_MOD
         public int maxFlips;
         private Random rnd;
         private ParseFormule parseFormule;
-
+        public int _numChars;
         int tempSumTrueFirstClozes;
         int tempSumTrueSecondClozes;
         string firstString;
         string secondString;
         private bool _onlyFirstData;
+        Stopwatch sw = new Stopwatch();
+        public bool outTime = false;
+        public int _maxtime;
 
         /// <summary>
         /// Жадный метод решения задачи SAT
@@ -248,13 +252,18 @@ namespace KU_17_WIN_MOD
         /// <param name="initFormula"></param>
         /// <param name="onlyFirstData"></param>
         /// <param name="countOfIterations"></param>
+        /// <param name="maxtime"></param>
         /// <param name="form"></param>
         /// <returns></returns>
-        public List<string> GreedyMethod(string initFormula, bool onlyFirstData, int countOfIterations = 1000)
+        public List<string> GreedyMethod(string initFormula, bool onlyFirstData, int maxtime, int countOfIterations = 1000)
         {
+            _maxtime = maxtime;
+            sw.Reset();
+            sw.Start();
             _onlyFirstData = onlyFirstData;
             Initialisation(initFormula, countOfIterations);
             Algorithm();
+            _numChars = valuesOperands.Length;
             return Finalization();
         }
 
@@ -278,6 +287,11 @@ namespace KU_17_WIN_MOD
                     RandomValuesOperands();
                 }
                 iterations++;
+                if (sw.Elapsed.TotalSeconds >= _maxtime)
+                {
+                    outTime = true;
+                    break;
+                }
             }
             return true;
         }

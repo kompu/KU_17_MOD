@@ -30,7 +30,7 @@ namespace KU_17_WIN_MOD
             OnlyTime.Checked = false;
             InitProcessBrute();
             CleanScreen();
-
+            
             progressBarOne.Maximum = maxChartAverage;
             progressBarMethod.Maximum = maxChartexamples;
 
@@ -90,7 +90,7 @@ namespace KU_17_WIN_MOD
             CleanScreen(); //clean
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
-
+            _control._maxtime = int.Parse(maxTime.Value.ToString());
             resList = _control.InitBrute(textBoxFormula.Text, OnlyFirstData.Checked);
 
             PrintData(resList);
@@ -116,6 +116,7 @@ namespace KU_17_WIN_MOD
             CleanScreen(); //clean
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
+            _control._maxtime = int.Parse(maxTime.Value.ToString());
 
             resList = _control.InitGreedy(textBoxFormula.Text, OnlyFirstData.Checked);
 
@@ -142,7 +143,8 @@ namespace KU_17_WIN_MOD
             CleanScreen(); //clean
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
-
+            _control._maxtime = int.Parse(maxTime.Value.ToString());
+            _control.outTime = false;
             List<string> resList = _control.InitRandom(textBoxFormula.Text, OnlyFirstData.Checked);
 
             PrintData(resList);
@@ -177,6 +179,7 @@ namespace KU_17_WIN_MOD
             richTextBoxRes.Text = string.Empty; //clean
             allResults = !OnlyTime.Checked;
             _control.Beta = checkBox1.Checked; //only for debug and beta versions//TODO
+            _control._maxtime = int.Parse(maxTime.Value.ToString());
 
             List<string> resList = _control.InitDPLL(textBoxFormula.Text, OnlyFirstData.Checked);
 
@@ -221,6 +224,8 @@ namespace KU_17_WIN_MOD
 
         private void PrintData(List<string> resList)
         {
+           
+
             if (!printChartProccess) //no print info form when create chart
             {
                 if (allResults)
@@ -280,8 +285,18 @@ namespace KU_17_WIN_MOD
                 {
                     richTextBoxRes.Text += nameMethods[m] + "- NLetters:" +
                                            ((index + 1) * 2).ToString().PadLeft(2, '0') + " aveTime: " +
-                                           TimeAllData[m, index].ToString("F8") + Environment.NewLine;
+                                           TimeAllData[m, index].ToString("F8");
+                    if (_control.outTime)
+                    {
+                        if (TimeAllData[m, index] == 15 || TimeAllData[m, index] == 0)
+                        {
+                            richTextBoxRes.Text += " outTime" + Environment.NewLine;    
+                        }
+                    }
+                    else
+                        richTextBoxRes.Text += " - " + Environment.NewLine;
                 }
+                _control.outTime = false;
                 progressBarTotal.Value++;
             }
 
@@ -290,9 +305,9 @@ namespace KU_17_WIN_MOD
 
             PrintCharts();
             chart1.ChartAreas[0].AxisX.Minimum = 3;
-            chart1.ChartAreas[0].AxisX.Maximum = (maxChartexamples+1)*2;
+            chart1.ChartAreas[0].AxisX.Maximum = (maxChartexamples * 2);
             chart2.ChartAreas[0].AxisX.Minimum = 3;
-            chart2.ChartAreas[0].AxisX.Maximum = (maxChartexamples + 1) * 2;
+            chart2.ChartAreas[0].AxisX.Maximum = (maxChartexamples * 2);
             printChartProccess = false;
         }
 
@@ -307,6 +322,7 @@ namespace KU_17_WIN_MOD
             progressBarMethod.Value = 0;
             for (int i = 0; i < maxChartexamples; i++)
             {
+                
                 progressBarOne.Value = 0;
                 TimeSpan span = TimeSpan.Zero;
                 for (int a = 0; a < maxChartAverage; a++)
@@ -317,22 +333,37 @@ namespace KU_17_WIN_MOD
                             _control.InitBrute(exampleData[i], !allResults);
                             break;
                         case 2:
-                            _control.InitRandom(exampleData[i], !allResults);
+                            if (!_control.outTime)
+                            {
+                                _control.InitRandom(exampleData[i], !allResults);
+                            }
                             break;
                         case 3:
-                            _control.InitGreedy(exampleData[i], !allResults);
+                            if (!_control.outTime)
+                            {
+                                _control.InitGreedy(exampleData[i], !allResults);
+                            }
                             break;
                         case 4:
                             _control.InitDPLL(exampleData[i], !allResults);
                             break;
 
                     }
-
+                    
                     span += _control.Sw.Elapsed;
                     progressBarOne.Value++;
                 }
+                
                 progressBarMethod.Value++;
-                TimeAllData[_actualMethod - 1, i] = Math.Round((Double)span.TotalSeconds / (Double)maxChartAverage, 10);
+                if (_control.outTime)
+                {
+                    TimeAllData[_actualMethod - 1, i] = 100;
+                }
+                else
+                {
+                    TimeAllData[_actualMethod - 1, i] = Math.Round((Double)span.TotalSeconds / (Double)maxChartAverage, 10);
+                }
+                
             }
         }
 

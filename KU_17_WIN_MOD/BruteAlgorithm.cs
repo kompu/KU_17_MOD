@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,12 @@ namespace KU_17_WIN_MOD
 {
     class BruteAlgorithm
     {
-        public List<string> initAlgorithm(string[] local, bool onlyFirstData, string input)
+        Stopwatch sw = new Stopwatch();
+        public int _numChars;
+        public List<string> initAlgorithm(string[] local, bool onlyFirstData, string input, int maxtime)
         {
+            sw.Reset();
+            sw.Start();
             List<string> resultList = new List<string>();
             Dictionary<string, int> letternum = new Dictionary<string, int>();
 
@@ -43,7 +48,13 @@ namespace KU_17_WIN_MOD
                 if (!resultad) continue;
                 resultList.Add(tempstring + ": " + resultad);
                 if (onlyFirstData) break;
+                if (sw.Elapsed.TotalSeconds >= maxtime)
+                {
+                    break;
+                }
             }
+            _numChars = numChars;
+            sw.Stop();
             return resultList;
         }
     }
