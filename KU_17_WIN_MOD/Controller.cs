@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace KU_17_WIN_MOD
 {
